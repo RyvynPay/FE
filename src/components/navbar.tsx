@@ -18,8 +18,8 @@ const NAV_LINKS = [
   { label: 'Mint', href: '/mint' },
   { label: 'Transfer', href: '/transfer' },
   { label: 'Reward', href: '/stream-bonds' },
+  { label: 'Boost', href: '/boost' },
   { label: 'Treasury', href: '/treasury' },
-  { label: 'Transactions', href: '/transactions' },
 ];
 
 export default function Navbar() {

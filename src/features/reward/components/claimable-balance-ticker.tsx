@@ -1,5 +1,5 @@
 import { Skeleton } from '@/components/ui/skeleton';
-import { ArrowUpRight } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
 
 interface ClaimableBalanceTickerProps {
   balance: number;
@@ -18,19 +18,27 @@ export default function ClaimableBalanceTicker({
     return <Skeleton className="h-16 w-64" />;
   }
 
-  // Format with high precision (6 decimals)
+  // Format with 8 decimals for better visibility of small amounts
   const formattedBalance = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-    minimumFractionDigits: 6,
-    maximumFractionDigits: 6,
+    minimumFractionDigits: 8,
+    maximumFractionDigits: 8,
   }).format(balance);
 
-  const dailyEarnings = flowRatePerSecond ? flowRatePerSecond * 86400 : 0;
+  // Format per-second rate with 10 decimals for precision
+  const formattedPerSecond = flowRatePerSecond
+    ? new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 10,
+        maximumFractionDigits: 10,
+      }).format(flowRatePerSecond)
+    : '$0.0000000000';
 
   return (
     <div className="space-y-4">
-      <div className="space-y-2">
+      <div className="my-3">
         <h3 className="text-muted-foreground text-sm font-medium tracking-wider uppercase">
           Pending Yield
         </h3>
@@ -39,15 +47,21 @@ export default function ClaimableBalanceTicker({
         </div>
       </div>
 
-      <div className="flex items-center gap-2 font-medium text-green-600 dark:text-green-400">
-        <ArrowUpRight className="h-5 w-5" />
-        {earningsRateApy && earningsRateApy > 0 ? (
-          <span>{earningsRateApy.toFixed(2)}% APY</span>
-        ) : null}
-        <span className="text-muted-foreground font-normal">
-          (≈${dailyEarnings.toFixed(2)} / day)
-        </span>
+      <div className="flex items-center gap-3 font-medium text-green-600 dark:text-green-400">
+        <TrendingUp className="h-5 w-5 animate-pulse" />
+        <div className="flex items-baseline gap-2">
+          <span className="text-sm md:text-lg">{formattedPerSecond}</span>
+          <span className="text-muted-foreground text-sm font-normal">
+            / sec
+          </span>
+        </div>
       </div>
+
+      {earningsRateApy && earningsRateApy > 0 ? (
+        <p className="text-muted-foreground text-xs">
+          Streaming at {earningsRateApy.toFixed(2)}% APY
+        </p>
+      ) : null}
     </div>
   );
 }

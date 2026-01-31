@@ -30,7 +30,7 @@ export default function MintPage() {
       </div>
 
       <motion.div
-        className="relative z-10 grid min-h-[calc(100vh-200px)] grid-cols-1 lg:gap-12 gap-7 lg:grid-cols-2"
+        className="relative z-10 grid min-h-[calc(100vh-200px)] grid-cols-1 gap-7 lg:grid-cols-2 lg:gap-12"
         variants={staggerContainer}
         initial="hidden"
         whileInView="show"
@@ -38,15 +38,13 @@ export default function MintPage() {
       >
         {/* Left Column */}
         <motion.div
-          className="flex flex-col lg:justify-center md:py-8 md:px-0 px-5"
+          className="flex flex-col justify-center px-5 md:px-0 md:py-8"
           variants={fadeInItem}
         >
-       
-
           {/* Bottom: Copywriting */}
           <div className="mt-5 lg:mt-0">
             <h2 className="text-3xl leading-tight font-extrabold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
-               Mint Yield-Bearing <br className="hidden md:block" />
+              Mint Yield-Bearing <br className="hidden md:block" />
               <span className="text-muted-foreground">Stablecoins.</span>
             </h2>
             <p className="text-muted-foreground mt-6 text-lg font-medium md:text-xl">

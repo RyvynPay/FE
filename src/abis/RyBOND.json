@@ -31,7 +31,13 @@
   {
     "type": "function",
     "name": "claim",
-    "inputs": [],
+    "inputs": [
+      {
+        "name": "stablecoin",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
     "outputs": [],
     "stateMutability": "nonpayable"
   },
@@ -248,6 +254,19 @@
   },
   {
     "type": "function",
+    "name": "ryIDR",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "contract IRyIDR"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "ryUSD",
     "inputs": [],
     "outputs": [
@@ -296,6 +315,19 @@
     "inputs": [
       {
         "name": "_predictionBoost",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setRyIDR",
+    "inputs": [
+      {
+        "name": "_ryIDR",
         "type": "address",
         "internalType": "address"
       }
@@ -603,6 +635,25 @@
   },
   {
     "type": "event",
+    "name": "RyIDRUpdated",
+    "inputs": [
+      {
+        "name": "oldRyIDR",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "newRyIDR",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "RyUSDUpdated",
     "inputs": [
       {
@@ -736,6 +787,11 @@
   {
     "type": "error",
     "name": "InsufficientBalance",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidStablecoin",
     "inputs": []
   },
   {

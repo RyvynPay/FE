@@ -1,5 +1,6 @@
 import RyBONDABI from '@/abis/RyBOND.json';
 import { BASE_SEPOLIA_CHAIN_ID, CONTRACTS } from '@/config/contracts';
+import { Currency } from '@/types/currency';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { formatUnits } from 'viem';
@@ -27,12 +28,13 @@ export type ClaimTransaction = {
   txHash?: string;
   amountClaimed?: number;
   timestamp?: number;
+  currency?: Currency;
 };
 
 export interface UseRewardDataReturn {
   stream: RewardStream;
   claimTx: ClaimTransaction;
-  claimReward: () => Promise<void>;
+  claimReward: (currency: Currency) => Promise<void>;
   isLoading: boolean;
 }
 
@@ -64,6 +66,7 @@ export function useRewardData(): UseRewardDataReturn {
     chainId: BASE_SEPOLIA_CHAIN_ID,
     query: {
       enabled: !!address,
+      refetchInterval: 15000, // Refetch every 15 seconds to stay synced with blockchain
     },
   });
 
@@ -108,6 +111,7 @@ export function useRewardData(): UseRewardDataReturn {
   });
 
   // Update stream state when balance changes from contract
+  // This syncs with blockchain every 15 seconds to prevent drift
   useEffect(() => {
     if (pendingBalance !== undefined) {
       const balanceVal = Number(formatUnits(pendingBalance as bigint, 6));
@@ -117,12 +121,13 @@ export function useRewardData(): UseRewardDataReturn {
         flowRateVal = Number(formatUnits(flowRateData as bigint, 24));
       }
 
+      // Reset to blockchain truth every time we get fresh data
       setStream(prev => ({
         ...prev,
-        claimableBalance: balanceVal,
+        claimableBalance: balanceVal, // Use actual blockchain balance
         earningsRateApy: 0,
         flowRatePerSecond: flowRateVal,
-        lastUpdated: Date.now(),
+        lastUpdated: Date.now(), // Reset the timer
         isStreaming: flowRateVal > 0,
       }));
     }
@@ -173,50 +178,85 @@ export function useRewardData(): UseRewardDataReturn {
     return () => clearInterval(interval);
   }, [stream.isStreaming, stream.flowRatePerSecond]);
 
-  // Handle claim success
+  // Handle claim success with transaction confirmation polling
   useEffect(() => {
     if (isClaimSuccess && claimTxHash && !hasShownSuccessToast.current) {
       hasShownSuccessToast.current = true;
 
       const claimedAmount = stream.claimableBalance;
+      const currencySymbol = claimTx.currency === Currency.IDR ? 'ryIDR' : 'ryUSD';
 
-      setClaimTx({
-        status: 'success',
-        txHash: claimTxHash,
-        amountClaimed: claimedAmount,
-        timestamp: Date.now(),
-      });
+      // Poll Blockscout API to confirm transaction
+      const pollTransaction = async () => {
+        const maxAttempts = 30;
+        let attempts = 0;
 
-      // Immediately reset balance to 0 after claim
-      setStream(prev => ({
-        ...prev,
-        claimableBalance: 0,
-        isStreaming: false, // Stop streaming temporarily
-        lastUpdated: Date.now(),
-      }));
+        while (attempts < maxAttempts) {
+          try {
+            const response = await fetch(
+              `https://base-sepolia.blockscout.com/api/v2/transactions/${claimTxHash}`
+            );
 
-      toast.success('ryUSD claimed successfully! Check your wallet.');
+            if (response.ok) {
+              const data = await response.json();
 
-      // Refetch to get accurate balance from blockchain
-      refetchPending();
-      refetchUserInfo();
+              if (data.status === 'ok') {
+                // Transaction confirmed! Now refetch balances
+                await Promise.all([refetchPending(), refetchUserInfo()]);
 
-      // Reset to idle after 5 seconds and resume streaming
-      setTimeout(() => {
-        setClaimTx({ status: 'idle' });
-        // hasShownSuccessToast.current = false; // MOVED to claimReward to prevent loop
+                // Show success state
+                setClaimTx(prev => ({
+                  status: 'success',
+                  txHash: claimTxHash,
+                  amountClaimed: claimedAmount,
+                  timestamp: Date.now(),
+                  currency: prev.currency,
+                }));
 
-        // Resume streaming if there's any new balance
-        setStream(prev => ({
-          ...prev,
-          isStreaming: prev.claimableBalance > 0,
+                toast.success(
+                  `${currencySymbol} claimed successfully! Check your wallet.`
+                );
+
+                // Reset to idle after 5 seconds
+                setTimeout(() => {
+                  setClaimTx({ status: 'idle' });
+                }, 5000);
+
+                return;
+              }
+            }
+          } catch (error) {
+            console.error('Error polling transaction:', error);
+          }
+
+          attempts++;
+          await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+
+        // Fallback if polling times out
+        await Promise.all([refetchPending(), refetchUserInfo()]);
+        setClaimTx(prev => ({
+          status: 'success',
+          txHash: claimTxHash,
+          amountClaimed: claimedAmount,
+          timestamp: Date.now(),
+          currency: prev.currency,
         }));
-      }, 5000);
+        toast.success(
+          `${currencySymbol} claimed successfully! Check your wallet.`
+        );
+        setTimeout(() => {
+          setClaimTx({ status: 'idle' });
+        }, 5000);
+      };
+
+      pollTransaction();
     }
   }, [
     isClaimSuccess,
     claimTxHash,
     stream.claimableBalance,
+    claimTx.currency,
     refetchPending,
     refetchUserInfo,
   ]);
@@ -264,7 +304,7 @@ export function useRewardData(): UseRewardDataReturn {
     }
   }, [claimError, receiptError]);
 
-  const claimReward = async () => {
+  const claimReward = async (currency: Currency) => {
     // Reset intent for new claim to allow success logic to trigger again
     hasShownSuccessToast.current = false;
 
@@ -293,14 +333,23 @@ export function useRewardData(): UseRewardDataReturn {
       }
     }
 
+    // Get the stablecoin address based on selected currency
+    const stablecoinAddress =
+      currency === Currency.USD ? CONTRACTS.ryUSD : CONTRACTS.ryIDR;
+
     try {
-      toast.info('Initiating claim transaction...');
+      const currencySymbol = currency === Currency.IDR ? 'ryIDR' : 'ryUSD';
+      toast.info(`Initiating claim as ${currencySymbol}...`);
+
+      // Store currency in transaction state
+      setClaimTx({ status: 'pending', currency });
+
       claim({
         address: CONTRACTS.ryBOND as `0x${string}`,
         abi: RyBONDABI,
         functionName: 'claim',
+        args: [stablecoinAddress],
         chainId: BASE_SEPOLIA_CHAIN_ID,
-        // Let wagmi estimate gas automatically instead of manually setting it
       });
     } catch (error) {
       console.error('Claim failed:', error);
