@@ -16,8 +16,14 @@ import TransactionTable from './transaction-table';
 
 export default function TransactionPage() {
   const { address, isConnected } = useAccount();
-  const [filters, setFilters] = useState<TransactionFilters>({ type: 'all' });
+  const [filters, setFilters] = useState<TransactionFilters>({
+    type: 'all',
+    currency: 'all',
+  });
   const { transactions, isLoading, refetch } = useTransactionHistory(filters);
+
+  console.log('Transactions:', transactions);
+  console.log('Is Loading:', isLoading);
 
   const handleRefresh = () => {
     refetch();
@@ -73,7 +79,7 @@ export default function TransactionPage() {
               Transaction History
             </h1>
             <p className="text-muted-foreground mt-2">
-              View all your ryUSD transactions including mints, claims, and
+              View all your ryUSD and ryIDR transactions including mints, claims, and
               transfers.
             </p>
           </div>
