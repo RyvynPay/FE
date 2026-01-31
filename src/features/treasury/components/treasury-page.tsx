@@ -2,15 +2,32 @@
 
 import PixelBlast from '@/components/PixelBlast';
 import { PageContainer } from '@/components/page-container';
+import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { fadeInItem, staggerContainer } from '@/lib/animations';
+import { Currency } from '@/types/currency';
 import { motion } from 'motion/react';
+import { useState } from 'react';
 import { useTreasuryData } from '../hooks/use-treasury-data';
 import AssetAllocationChart from './asset-allocation-chart';
 import TreasuryStatsCard from './treasury-stats-card';
 
 export default function TreasuryPage() {
-  const { assets, liquidity, yieldMetrics, isLoading } = useTreasuryData();
+  const [currency, setCurrency] = useState<Currency>(Currency.USD);
+  const {
+    usdAssets,
+    idrAssets,
+    usdLiquidity,
+    idrLiquidity,
+    yieldMetrics,
+    isLoading,
+  } = useTreasuryData();
+
+  const currentAssets = currency === Currency.USD ? usdAssets : idrAssets;
+  const currentLiquidity =
+    currency === Currency.USD ? usdLiquidity : idrLiquidity;
+
+  console.log(idrAssets);
 
   console.log(yieldMetrics);
 
@@ -82,9 +99,25 @@ export default function TreasuryPage() {
                 <span className="text-muted-foreground">BUILDS TRUST.</span>
               </h2>
               <p className="text-muted-foreground text-lg font-medium md:text-xl lg:mt-6">
-                Verifiable on-chain assets backing every ryUSD in circulation.
+                Verifiable on-chain assets backing every{' '}
+                {currency === Currency.USD ? 'ryUSD' : 'ryIDR'} in circulation.
               </p>
             </div>
+          </div>
+          {/* Currency Toggle */}
+          <div className="mt-4 mb-6 flex justify-center gap-2">
+            <Button
+              onClick={() => setCurrency(Currency.USD)}
+              variant={currency === Currency.USD ? 'default' : 'outline'}
+            >
+              USD Vaults
+            </Button>
+            <Button
+              onClick={() => setCurrency(Currency.IDR)}
+              variant={currency === Currency.IDR ? 'default' : 'outline'}
+            >
+              IDR Vaults
+            </Button>
           </div>
         </motion.div>
 
@@ -94,7 +127,7 @@ export default function TreasuryPage() {
             <div className="flex flex-col justify-end">
               <div className="flex items-center justify-center px-4 lg:justify-end lg:p-6">
                 <div className="w-full max-w-xl">
-                  <AssetAllocationChart assets={assets} />
+                  <AssetAllocationChart assets={currentAssets} />
                 </div>
               </div>
             </div>
@@ -102,9 +135,10 @@ export default function TreasuryPage() {
             {/* Right: Stats Card */}
             <div className="lg:h-full">
               <TreasuryStatsCard
-                liquidity={liquidity}
+                liquidity={currentLiquidity}
                 yieldMetrics={yieldMetrics}
-                assets={assets}
+                assets={currentAssets}
+                currency={currency}
               />
             </div>
           </div>

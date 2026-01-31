@@ -23,6 +23,8 @@ export default function AssetAllocationChart({
 }: AssetAllocationChartProps) {
   // Map assets to chart data format
   const chartData = React.useMemo(() => {
+    if (!assets || assets.length === 0) return [];
+
     return assets.map(asset => ({
       asset: asset.id,
       value: asset.allocation,
@@ -41,12 +43,14 @@ export default function AssetAllocationChart({
         label: 'Allocation',
       },
     };
-    assets.forEach((asset, index) => {
-      config[asset.id] = {
-        label: asset.name,
-        color: `var(--chart-${index + 1})`,
-      };
-    });
+    if (assets && assets.length > 0) {
+      assets.forEach((asset, index) => {
+        config[asset.id] = {
+          label: asset.name,
+          color: `var(--chart-${index + 1})`,
+        };
+      });
+    }
     return config;
   }, [assets]);
 
@@ -60,7 +64,7 @@ export default function AssetAllocationChart({
   return (
     <Card className="flex h-full flex-col border-0 bg-transparent shadow-none">
       <CardHeader className="items-center pb-0">
-        <CardTitle className="sr-only flex items-center gap-2 text-xl font-bold">
+        <CardTitle className="flex items-center gap-2 text-xl font-bold lg:text-2xl">
           Asset Allocation
         </CardTitle>
       </CardHeader>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTreasuryManagerData } from './use-treasury-manager-data';
+import { useTreasuryManagerIDRData } from './use-treasury-manager-idr-data';
 import { useYieldManagerData } from './use-yield-manager-data';
 
 export type TreasuryAsset = {
@@ -36,8 +37,10 @@ export type YieldMetrics = {
 };
 
 export interface UseTreasuryDataReturn {
-  assets: TreasuryAsset[];
-  liquidity: LiquidityState;
+  usdAssets: TreasuryAsset[];
+  idrAssets: TreasuryAsset[];
+  usdLiquidity: LiquidityState;
+  idrLiquidity: LiquidityState;
   yieldMetrics: YieldMetrics;
   isLoading: boolean;
 }
@@ -58,8 +61,11 @@ export function useTreasuryData(): UseTreasuryDataReturn {
   console.log('aaa', yieldManagerStats);
   const { info: treasuryInfo, isLoading: isLoadingTreasury } =
     useTreasuryManagerData();
+  const { info: treasuryIDRInfo, isLoading: isLoadingTreasuryIDR } =
+    useTreasuryManagerIDRData();
 
-  const [assets, setAssets] = useState<TreasuryAsset[]>([]);
+  const [usdAssets, setUsdAssets] = useState<TreasuryAsset[]>([]);
+  const [idrAssets, setIdrAssets] = useState<TreasuryAsset[]>([]);
   const [yieldMetrics, setYieldMetrics] = useState<YieldMetrics>(
     INITIAL_YIELD_METRICS
   );
@@ -70,7 +76,7 @@ export function useTreasuryData(): UseTreasuryDataReturn {
       const totalAllocated = treasuryInfo.totalAllocated;
       const totalFunds = treasuryInfo.totalDeposited || 1;
 
-      // Base chain allocation (40/30/15/10/5)
+      // USD vaults (40/30/15/10/5)
       const usycValue = totalAllocated * 0.4;
       const aaveValue = totalAllocated * 0.3;
       const aerodromeValue = totalAllocated * 0.15;
@@ -82,7 +88,7 @@ export function useTreasuryData(): UseTreasuryDataReturn {
       const thetanutsPct = (thetanutsValue / totalFunds) * 100;
       const hotWalletPct = (treasuryInfo.hotWalletBalance / totalFunds) * 100;
 
-      const newAssets: TreasuryAsset[] = [
+      const newUsdAssets: TreasuryAsset[] = [
         {
           id: 'usyc',
           name: 'USYC Vault',
@@ -134,7 +140,41 @@ export function useTreasuryData(): UseTreasuryDataReturn {
         },
       ];
 
-      setAssets(newAssets);
+      setUsdAssets(newUsdAssets);
+
+      // IDR vault (95/5)
+      if (treasuryIDRInfo) {
+        const idrTotalFunds = treasuryIDRInfo.totalDeposited || 1;
+        const idrxValue = treasuryIDRInfo.totalAllocated * 0.95;
+        const idrHotWalletValue = treasuryIDRInfo.hotWalletBalance;
+
+        const idrxPct = (idrxValue / idrTotalFunds) * 100;
+        const idrHotWalletPct = (idrHotWalletValue / idrTotalFunds) * 100;
+
+        const newIdrAssets: TreasuryAsset[] = [
+          {
+            id: 'idrx',
+            name: 'IDRX Vault',
+            description: 'Indonesian Rupiah Yield',
+            allocation: Number(idrxPct.toFixed(2)),
+            value: idrxValue,
+            apy: 3.5,
+            verificationLink: '#',
+            colorVar: 'var(--chart-1)',
+          },
+          {
+            id: 'idr-buffer',
+            name: 'Hot Wallet',
+            description: 'Instant withdrawal liquidity',
+            allocation: Number(idrHotWalletPct.toFixed(2)),
+            value: idrHotWalletValue,
+            apy: 0,
+            colorVar: 'var(--chart-3)',
+          },
+        ];
+
+        setIdrAssets(newIdrAssets);
+      }
 
       setYieldMetrics({
         unallocatedPool: yieldManagerStats.unallocatedPool,
@@ -150,39 +190,77 @@ export function useTreasuryData(): UseTreasuryDataReturn {
         lastUpdated: Date.now(),
       });
     }
-  }, [yieldManagerStats, treasuryInfo]);
+  }, [yieldManagerStats, treasuryInfo, treasuryIDRInfo]);
 
-  const bufferAsset = assets.find(a => a.id === 'buffer');
-  const allLendingValue =
-    (assets.find(a => a.id === 'aave')?.value || 0) +
-    (assets.find(a => a.id === 'aerodrome')?.value || 0) +
-    (assets.find(a => a.id === 'thetanuts')?.value || 0);
+  // USD Liquidity
+  const usdBufferAsset = usdAssets.find(
+    (a: TreasuryAsset) => a.id === 'buffer'
+  );
+  const usdAllLendingValue =
+    (usdAssets.find((a: TreasuryAsset) => a.id === 'aave')?.value || 0) +
+    (usdAssets.find((a: TreasuryAsset) => a.id === 'aerodrome')?.value || 0) +
+    (usdAssets.find((a: TreasuryAsset) => a.id === 'thetanuts')?.value || 0);
 
-  const hotWalletValue = bufferAsset ? bufferAsset.value : 0;
+  const usdHotWalletValue = usdBufferAsset ? usdBufferAsset.value : 0;
+  const usdTotalTvl = usdAssets.reduce(
+    (sum: number, a: TreasuryAsset) => sum + a.value,
+    0
+  );
+  const usdHotWalletRatio =
+    usdTotalTvl > 0 ? usdHotWalletValue / usdTotalTvl : 0;
 
-  const totalTvl = assets.reduce((sum, a) => sum + a.value, 0);
-  const hotWalletRatio = totalTvl > 0 ? hotWalletValue / totalTvl : 0;
-
-  const liquidity: LiquidityState = {
+  const usdLiquidity: LiquidityState = {
     hotWallet: {
-      value: hotWalletValue,
+      value: usdHotWalletValue,
       threshold: 0.05,
-      status: hotWalletRatio < 0.05 ? 'warning' : 'healthy',
+      status: usdHotWalletRatio < 0.05 ? 'warning' : 'healthy',
     },
     lendingStrategy: {
-      value: allLendingValue,
+      value: usdAllLendingValue,
       protocol: 'Multi-Strategy',
     },
-    totalTvl,
+    totalTvl: usdTotalTvl,
+  };
+
+  // IDR Liquidity
+  const idrBufferAsset = idrAssets.find(
+    (a: TreasuryAsset) => a.id === 'idr-buffer'
+  );
+  const idrVaultValue =
+    idrAssets.find((a: TreasuryAsset) => a.id === 'idrx')?.value || 0;
+
+  const idrHotWalletValue = idrBufferAsset ? idrBufferAsset.value : 0;
+  const idrTotalTvl = idrAssets.reduce(
+    (sum: number, a: TreasuryAsset) => sum + a.value,
+    0
+  );
+  const idrHotWalletRatio =
+    idrTotalTvl > 0 ? idrHotWalletValue / idrTotalTvl : 0;
+
+  const idrLiquidity: LiquidityState = {
+    hotWallet: {
+      value: idrHotWalletValue,
+      threshold: 0.05,
+      status: idrHotWalletRatio < 0.05 ? 'warning' : 'healthy',
+    },
+    lendingStrategy: {
+      value: idrVaultValue,
+      protocol: 'IDRX Vault',
+    },
+    totalTvl: idrTotalTvl,
   };
 
   useEffect(() => {
-    setIsLoading(isLoadingYieldManager || isLoadingTreasury);
-  }, [isLoadingYieldManager, isLoadingTreasury]);
+    setIsLoading(
+      isLoadingYieldManager || isLoadingTreasury || isLoadingTreasuryIDR
+    );
+  }, [isLoadingYieldManager, isLoadingTreasury, isLoadingTreasuryIDR]);
 
   return {
-    assets,
-    liquidity,
+    usdAssets,
+    idrAssets,
+    usdLiquidity,
+    idrLiquidity,
     yieldMetrics,
     isLoading,
   };

@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
+import { Currency } from '@/types/currency';
 import { DollarSign, Droplets, Shield, TrendingUp } from 'lucide-react';
 import {
   LiquidityState,
@@ -12,12 +13,14 @@ interface TreasuryStatsCardProps {
   liquidity: LiquidityState;
   yieldMetrics: YieldMetrics;
   assets: TreasuryAsset[];
+  currency: Currency;
 }
 
 export default function TreasuryStatsCard({
   liquidity,
   yieldMetrics,
   assets,
+  currency,
 }: TreasuryStatsCardProps) {
   const { hotWallet, lendingStrategy, totalTvl } = liquidity;
   const hotWalletPercent = (hotWallet.value / totalTvl) * 100;
@@ -26,10 +29,13 @@ export default function TreasuryStatsCard({
   const progressColorClass = isWarning ? 'bg-amber-500' : 'bg-green-500';
 
   const formatCompactNumber = (num: number) => {
-    if (num >= 1000000) return `$${(num / 1000000).toFixed(2)}M`;
-    if (num >= 1000) return `$${(num / 1000).toFixed(2)}k`;
-    return `$${num.toFixed(2)}`;
+    const symbol = currency === Currency.USD ? '$' : 'Rp ';
+    if (num >= 1000000) return `${symbol}${(num / 1000000).toFixed(2)}M`;
+    if (num >= 1000) return `${symbol}${(num / 1000).toFixed(2)}k`;
+    return `${symbol}${num.toFixed(2)}`;
   };
+
+  console.log('aasda', hotWallet);
 
   return (
     <Card className="h-full">
@@ -96,6 +102,28 @@ export default function TreasuryStatsCard({
               />
             </div>
           </div>
+
+          {/* IDRX Vault (IDR only) */}
+          {assets.find(a => a.id === 'idrx') && (
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs">
+                <span className="text-muted-foreground">IDRX Vault</span>
+                <span className="font-mono">
+                  {formatCompactNumber(
+                    assets.find(a => a.id === 'idrx')?.value || 0
+                  )}
+                </span>
+              </div>
+              <div className="bg-secondary relative h-2 w-full overflow-hidden rounded-full">
+                <div
+                  className="h-full w-full flex-1 bg-teal-500 transition-all"
+                  style={{
+                    transform: `translateX(-${100 - ((assets.find(a => a.id === 'idrx')?.value || 0) / totalTvl) * 100}%)`,
+                  }}
+                />
+              </div>
+            </div>
+          )}
 
           {/* USYC */}
           {assets.find(a => a.id === 'usyc') && (
