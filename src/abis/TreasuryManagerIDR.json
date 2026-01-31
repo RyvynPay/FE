@@ -3,27 +3,12 @@
     "type": "constructor",
     "inputs": [
       {
-        "name": "_usdc",
+        "name": "_idrx",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "_usyc",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "_aave",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "_aerodrome",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "_thetanuts",
+        "name": "_idrxVault",
         "type": "address",
         "internalType": "address"
       },
@@ -42,14 +27,7 @@
   },
   {
     "type": "function",
-    "name": "allocate",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "canRedeem",
+    "name": "allocateDeposits",
     "inputs": [
       {
         "name": "amount",
@@ -57,14 +35,8 @@
         "internalType": "uint256"
       }
     ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool",
-        "internalType": "bool"
-      }
-    ],
-    "stateMutability": "view"
+    "outputs": [],
+    "stateMutability": "nonpayable"
   },
   {
     "type": "function",
@@ -85,13 +57,23 @@
         "name": "_hotWallet",
         "type": "uint256",
         "internalType": "uint256"
+      },
+      {
+        "name": "_idrxBalance",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_reserveBalance",
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "name": "getHotWalletBalance",
+    "name": "getTotalAssets",
     "inputs": [],
     "outputs": [
       {
@@ -104,42 +86,15 @@
   },
   {
     "type": "function",
-    "name": "getStrategies",
+    "name": "harvestYield",
     "inputs": [],
     "outputs": [
       {
-        "name": "_usyc",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "_aave",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "_aerodrome",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "_thetanuts",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "_reserve",
-        "type": "address",
-        "internalType": "address"
+        "name": "totalYield",
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "harvestAllYield",
-    "inputs": [],
-    "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
@@ -164,6 +119,19 @@
         "name": "",
         "type": "uint256",
         "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "idrx",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "contract IERC20"
       }
     ],
     "stateMutability": "view"
@@ -247,7 +215,7 @@
   },
   {
     "type": "function",
-    "name": "ryUSD",
+    "name": "ryIDR",
     "inputs": [],
     "outputs": [
       {
@@ -257,6 +225,19 @@
       }
     ],
     "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "setHotWalletThreshold",
+    "inputs": [
+      {
+        "name": "_threshold",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
   },
   {
     "type": "function",
@@ -273,10 +254,10 @@
   },
   {
     "type": "function",
-    "name": "setRyUSD",
+    "name": "setRyIDR",
     "inputs": [
       {
-        "name": "_ryUSD",
+        "name": "_ryIDR",
         "type": "address",
         "internalType": "address"
       }
@@ -286,46 +267,7 @@
   },
   {
     "type": "function",
-    "name": "setStrategyAave",
-    "inputs": [
-      {
-        "name": "_strategy",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setStrategyAerodrome",
-    "inputs": [
-      {
-        "name": "_strategy",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setStrategyThetanuts",
-    "inputs": [
-      {
-        "name": "_strategy",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setStrategyUSYC",
+    "name": "setStrategyIDRX",
     "inputs": [
       {
         "name": "_strategy",
@@ -351,46 +293,7 @@
   },
   {
     "type": "function",
-    "name": "strategyAave",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "strategyAerodrome",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "strategyThetanuts",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "strategyUSYC",
+    "name": "strategyIDRX",
     "inputs": [],
     "outputs": [
       {
@@ -442,19 +345,6 @@
   },
   {
     "type": "function",
-    "name": "usdc",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "contract IERC20"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "yieldManager",
     "inputs": [],
     "outputs": [
@@ -477,25 +367,7 @@
         "internalType": "uint256"
       },
       {
-        "name": "toUSYC",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "toAave",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "toAerodrome",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "toThetanuts",
+        "name": "toIDRX",
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"

@@ -3,12 +3,12 @@
     "type": "constructor",
     "inputs": [
       {
-        "name": "_ryvynHandler",
+        "name": "_underlyingToken",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "_ryUSD",
+        "name": "_initialOwner",
         "type": "address",
         "internalType": "address"
       }
@@ -17,7 +17,100 @@
   },
   {
     "type": "function",
-    "name": "MULTIPLIER_BASE",
+    "name": "allowance",
+    "inputs": [
+      {
+        "name": "owner",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "spender",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "approve",
+    "inputs": [
+      {
+        "name": "spender",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "value",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "balanceOf",
+    "inputs": [
+      {
+        "name": "account",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "decimals",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint8",
+        "internalType": "uint8"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "deposit",
+    "inputs": [
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "getMintHistoryLength",
     "inputs": [],
     "outputs": [
       {
@@ -30,14 +123,170 @@
   },
   {
     "type": "function",
-    "name": "claim",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
+    "name": "getMintRecord",
+    "inputs": [
+      {
+        "name": "index",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "tuple",
+        "internalType": "struct RyIDR.MintRecord",
+        "components": [
+          {
+            "name": "user",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "amount",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "timestamp",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "blockNumber",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      }
+    ],
+    "stateMutability": "view"
   },
   {
     "type": "function",
-    "name": "creditRyBond",
+    "name": "getStats",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "_totalMinted",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_totalBurned",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_totalSupply",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_mintCount",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getUserMintCount",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getUserMintHistory",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "tuple[]",
+        "internalType": "struct RyIDR.MintRecord[]",
+        "components": [
+          {
+            "name": "user",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "amount",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "timestamp",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "blockNumber",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "mintHistory",
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "timestamp",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "blockNumber",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "mintReward",
     "inputs": [
       {
         "name": "user",
@@ -55,141 +304,13 @@
   },
   {
     "type": "function",
-    "name": "creditTransferReward",
-    "inputs": [
-      {
-        "name": "sender",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "senderReward",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "receiver",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "receiverReward",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "flowMultiplier",
-    "inputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
+    "name": "name",
+    "inputs": [],
     "outputs": [
       {
         "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "getEffectiveMultiplier",
-    "inputs": [
-      {
-        "name": "user",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "getFlowRate",
-    "inputs": [
-      {
-        "name": "user",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "getTotalBalance",
-    "inputs": [
-      {
-        "name": "user",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "lockStake",
-    "inputs": [
-      {
-        "name": "user",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "amount",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "lockedStake",
-    "inputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
+        "type": "string",
+        "internalType": "string"
       }
     ],
     "stateMutability": "view"
@@ -209,38 +330,6 @@
   },
   {
     "type": "function",
-    "name": "pendingRyBond",
-    "inputs": [
-      {
-        "name": "user",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "predictionBoost",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "renounceOwnership",
     "inputs": [],
     "outputs": [],
@@ -248,13 +337,13 @@
   },
   {
     "type": "function",
-    "name": "ryUSD",
+    "name": "ryBOND",
     "inputs": [],
     "outputs": [
       {
         "name": "",
         "type": "address",
-        "internalType": "contract IRyUSD"
+        "internalType": "address"
       }
     ],
     "stateMutability": "view"
@@ -274,85 +363,106 @@
   },
   {
     "type": "function",
-    "name": "setFlowMultiplier",
+    "name": "setHandler",
     "inputs": [
       {
-        "name": "user",
+        "name": "_handler",
         "type": "address",
         "internalType": "address"
-      },
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setRyBOND",
+    "inputs": [
       {
-        "name": "multiplier",
+        "name": "_ryBOND",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setTreasury",
+    "inputs": [
+      {
+        "name": "_treasury",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "symbol",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "string",
+        "internalType": "string"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "totalBurned",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
         "type": "uint256",
         "internalType": "uint256"
       }
     ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
+    "stateMutability": "view"
   },
   {
     "type": "function",
-    "name": "setPredictionBoost",
-    "inputs": [
+    "name": "totalMinted",
+    "inputs": [],
+    "outputs": [
       {
-        "name": "_predictionBoost",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setRyUSD",
-    "inputs": [
-      {
-        "name": "_ryUSD",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setRyvynHandler",
-    "inputs": [
-      {
-        "name": "_ryvynHandler",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setVestingDuration",
-    "inputs": [
-      {
-        "name": "newDuration",
+        "name": "",
         "type": "uint256",
         "internalType": "uint256"
       }
     ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
+    "stateMutability": "view"
   },
   {
     "type": "function",
-    "name": "slashStake",
+    "name": "totalSupply",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "transfer",
     "inputs": [
       {
-        "name": "user",
+        "name": "to",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "amount",
+        "name": "value",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -360,8 +470,37 @@
     "outputs": [
       {
         "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "transferFrom",
+    "inputs": [
+      {
+        "name": "from",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "to",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "value",
         "type": "uint256",
         "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
       }
     ],
     "stateMutability": "nonpayable"
@@ -381,13 +520,58 @@
   },
   {
     "type": "function",
-    "name": "unlockStake",
+    "name": "treasuryManager",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "underlyingToken",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "contract IERC20"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "userMintIndices",
     "inputs": [
       {
-        "name": "user",
+        "name": "",
         "type": "address",
         "internalType": "address"
       },
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "withdraw",
+    "inputs": [
       {
         "name": "amount",
         "type": "uint256",
@@ -398,55 +582,33 @@
     "stateMutability": "nonpayable"
   },
   {
-    "type": "function",
-    "name": "userInfo",
+    "type": "event",
+    "name": "Approval",
     "inputs": [
       {
-        "name": "",
+        "name": "owner",
         "type": "address",
+        "indexed": true,
         "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "lockedBalance",
-        "type": "uint128",
-        "internalType": "uint128"
       },
       {
-        "name": "vestedBalance",
-        "type": "uint128",
-        "internalType": "uint128"
+        "name": "spender",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
       },
       {
-        "name": "vestingEnd",
-        "type": "uint64",
-        "internalType": "uint64"
-      },
-      {
-        "name": "lastUpdate",
-        "type": "uint64",
-        "internalType": "uint64"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "vestingDuration",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
+        "name": "value",
         "type": "uint256",
+        "indexed": false,
         "internalType": "uint256"
       }
     ],
-    "stateMutability": "view"
+    "anonymous": false
   },
   {
     "type": "event",
-    "name": "FlowMultiplierUpdated",
+    "name": "Deposit",
     "inputs": [
       {
         "name": "user",
@@ -455,15 +617,15 @@
         "internalType": "address"
       },
       {
-        "name": "oldMultiplier",
+        "name": "amount",
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
       },
       {
-        "name": "newMultiplier",
+        "name": "mintIndex",
         "type": "uint256",
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256"
       }
     ],
@@ -509,26 +671,7 @@
   },
   {
     "type": "event",
-    "name": "PredictionBoostUpdated",
-    "inputs": [
-      {
-        "name": "oldBoost",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
-      {
-        "name": "newBoost",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "RyBONDAccrued",
+    "name": "RewardMinted",
     "inputs": [
       {
         "name": "user",
@@ -553,66 +696,16 @@
   },
   {
     "type": "event",
-    "name": "RyBONDClaimed",
+    "name": "RyBONDUpdated",
     "inputs": [
       {
-        "name": "user",
+        "name": "oldRyBOND",
         "type": "address",
         "indexed": true,
         "internalType": "address"
       },
       {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "timestamp",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "RyBONDCredited",
-    "inputs": [
-      {
-        "name": "user",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
-      {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "timestamp",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "RyUSDUpdated",
-    "inputs": [
-      {
-        "name": "oldRyUSD",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
-      {
-        "name": "newRyUSD",
+        "name": "newRyBOND",
         "type": "address",
         "indexed": true,
         "internalType": "address"
@@ -622,16 +715,22 @@
   },
   {
     "type": "event",
-    "name": "StakeLocked",
+    "name": "Transfer",
     "inputs": [
       {
-        "name": "user",
+        "name": "from",
         "type": "address",
         "indexed": true,
         "internalType": "address"
       },
       {
-        "name": "amount",
+        "name": "to",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "value",
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
@@ -641,7 +740,26 @@
   },
   {
     "type": "event",
-    "name": "StakeSlashed",
+    "name": "TreasuryUpdated",
+    "inputs": [
+      {
+        "name": "oldTreasury",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "newTreasury",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "Withdrawal",
     "inputs": [
       {
         "name": "user",
@@ -659,79 +777,90 @@
     "anonymous": false
   },
   {
-    "type": "event",
-    "name": "StakeUnlocked",
+    "type": "error",
+    "name": "ERC20InsufficientAllowance",
     "inputs": [
       {
-        "name": "user",
+        "name": "spender",
         "type": "address",
-        "indexed": true,
         "internalType": "address"
       },
       {
-        "name": "amount",
+        "name": "allowance",
         "type": "uint256",
-        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "needed",
+        "type": "uint256",
         "internalType": "uint256"
       }
-    ],
-    "anonymous": false
+    ]
   },
   {
-    "type": "event",
-    "name": "TransferRewardDistributed",
+    "type": "error",
+    "name": "ERC20InsufficientBalance",
     "inputs": [
       {
         "name": "sender",
         "type": "address",
-        "indexed": true,
         "internalType": "address"
       },
+      {
+        "name": "balance",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "needed",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "ERC20InvalidApprover",
+    "inputs": [
+      {
+        "name": "approver",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "ERC20InvalidReceiver",
+    "inputs": [
       {
         "name": "receiver",
         "type": "address",
-        "indexed": true,
         "internalType": "address"
-      },
-      {
-        "name": "senderReward",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "receiverReward",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "timestamp",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
       }
-    ],
-    "anonymous": false
+    ]
   },
   {
-    "type": "event",
-    "name": "VestingDurationUpdated",
+    "type": "error",
+    "name": "ERC20InvalidSender",
     "inputs": [
       {
-        "name": "oldDuration",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "newDuration",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
+        "name": "sender",
+        "type": "address",
+        "internalType": "address"
       }
-    ],
-    "anonymous": false
+    ]
+  },
+  {
+    "type": "error",
+    "name": "ERC20InvalidSpender",
+    "inputs": [
+      {
+        "name": "spender",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
   },
   {
     "type": "error",
@@ -740,17 +869,12 @@
   },
   {
     "type": "error",
-    "name": "NotHandler",
+    "name": "InvalidIndex",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "NotPredictionBoost",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "NothingToClaim",
+    "name": "NotRyBOND",
     "inputs": []
   },
   {
@@ -779,6 +903,17 @@
     "type": "error",
     "name": "ReentrancyGuardReentrantCall",
     "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "SafeERC20FailedOperation",
+    "inputs": [
+      {
+        "name": "token",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
   },
   {
     "type": "error",

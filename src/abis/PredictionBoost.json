@@ -3,37 +3,22 @@
     "type": "constructor",
     "inputs": [
       {
-        "name": "_usdc",
+        "name": "_ryBond",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "_usyc",
+        "name": "_yieldManager",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "_aave",
+        "name": "_priceFeed",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "_aerodrome",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "_thetanuts",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "_reserve",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "_owner",
+        "name": "_treasury",
         "type": "address",
         "internalType": "address"
       }
@@ -42,19 +27,143 @@
   },
   {
     "type": "function",
-    "name": "allocate",
+    "name": "BURN_SHARE",
     "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
   },
   {
     "type": "function",
-    "name": "canRedeem",
-    "inputs": [
+    "name": "MULTIPLIER_BASE",
+    "inputs": [],
+    "outputs": [
       {
-        "name": "amount",
+        "name": "",
         "type": "uint256",
         "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "PERCENT_BASE",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "TREASURY_SHARE",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "YIELD_POOL_SHARE",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "calculateStake",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "tier",
+        "type": "uint8",
+        "internalType": "enum PredictionBoost.StakeTier"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getCurrentPrice",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getTierConfig",
+    "inputs": [
+      {
+        "name": "tier",
+        "type": "uint8",
+        "internalType": "enum PredictionBoost.StakeTier"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "stakePercent",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "winMultiplier",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "loseMultiplier",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "hasActivePrediction",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "outputs": [
@@ -65,139 +174,6 @@
       }
     ],
     "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "getAllocationInfo",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "_totalDeposited",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "_totalAllocated",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "_hotWallet",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "getHotWalletBalance",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "getStrategies",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "_usyc",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "_aave",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "_aerodrome",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "_thetanuts",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "_reserve",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "harvestAllYield",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "hotWalletBalance",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "hotWalletThreshold",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "onMint",
-    "inputs": [
-      {
-        "name": "amount",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "onRedeem",
-    "inputs": [
-      {
-        "name": "to",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "amount",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
   },
   {
     "type": "function",
@@ -214,16 +190,63 @@
   },
   {
     "type": "function",
-    "name": "refillHotWallet",
+    "name": "predict",
     "inputs": [
       {
-        "name": "amount",
+        "name": "targetPrice",
         "type": "uint256",
         "internalType": "uint256"
+      },
+      {
+        "name": "isAbove",
+        "type": "bool",
+        "internalType": "bool"
+      },
+      {
+        "name": "expiry",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "tier",
+        "type": "uint8",
+        "internalType": "enum PredictionBoost.StakeTier"
       }
     ],
     "outputs": [],
     "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "predictionCount",
+    "inputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "priceFeed",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "contract IAggregatorV3"
+      }
+    ],
+    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -234,176 +257,117 @@
   },
   {
     "type": "function",
-    "name": "reserveWallet",
+    "name": "resetMultiplier",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "resolve",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "ryBond",
     "inputs": [],
     "outputs": [
       {
         "name": "",
         "type": "address",
-        "internalType": "address"
+        "internalType": "contract IRyBOND"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "name": "ryUSD",
-    "inputs": [],
-    "outputs": [
+    "name": "setPriceFeed",
+    "inputs": [
       {
-        "name": "",
+        "name": "_priceFeed",
         "type": "address",
         "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setTierConfig",
+    "inputs": [
+      {
+        "name": "tier",
+        "type": "uint8",
+        "internalType": "enum PredictionBoost.StakeTier"
+      },
+      {
+        "name": "stakePercent",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "winMultiplier",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "loseMultiplier",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setTreasury",
+    "inputs": [
+      {
+        "name": "_treasury",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "tierConfigs",
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint8",
+        "internalType": "enum PredictionBoost.StakeTier"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "stakePercent",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "winMultiplier",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "loseMultiplier",
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "name": "setReserveWallet",
-    "inputs": [
-      {
-        "name": "_reserve",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setRyUSD",
-    "inputs": [
-      {
-        "name": "_ryUSD",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setStrategyAave",
-    "inputs": [
-      {
-        "name": "_strategy",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setStrategyAerodrome",
-    "inputs": [
-      {
-        "name": "_strategy",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setStrategyThetanuts",
-    "inputs": [
-      {
-        "name": "_strategy",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setStrategyUSYC",
-    "inputs": [
-      {
-        "name": "_strategy",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setYieldManager",
-    "inputs": [
-      {
-        "name": "_yieldManager",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "strategyAave",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "strategyAerodrome",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "strategyThetanuts",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "strategyUSYC",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "totalAllocated",
+    "name": "totalBurned",
     "inputs": [],
     "outputs": [
       {
@@ -416,7 +380,7 @@
   },
   {
     "type": "function",
-    "name": "totalDeposited",
+    "name": "totalSlashed",
     "inputs": [],
     "outputs": [
       {
@@ -442,13 +406,62 @@
   },
   {
     "type": "function",
-    "name": "usdc",
+    "name": "treasury",
     "inputs": [],
     "outputs": [
       {
         "name": "",
         "type": "address",
-        "internalType": "contract IERC20"
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "userPredictions",
+    "inputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "targetPrice",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "expiry",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "stakeAmount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "tier",
+        "type": "uint8",
+        "internalType": "enum PredictionBoost.StakeTier"
+      },
+      {
+        "name": "isAbove",
+        "type": "bool",
+        "internalType": "bool"
+      },
+      {
+        "name": "resolved",
+        "type": "bool",
+        "internalType": "bool"
+      },
+      {
+        "name": "won",
+        "type": "bool",
+        "internalType": "bool"
       }
     ],
     "stateMutability": "view"
@@ -461,85 +474,10 @@
       {
         "name": "",
         "type": "address",
-        "internalType": "address"
+        "internalType": "contract IYieldManager"
       }
     ],
     "stateMutability": "view"
-  },
-  {
-    "type": "event",
-    "name": "Allocated",
-    "inputs": [
-      {
-        "name": "total",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "toUSYC",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "toAave",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "toAerodrome",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "toThetanuts",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "toReserve",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "Deposited",
-    "inputs": [
-      {
-        "name": "from",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
-      {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "HotWalletRefilled",
-    "inputs": [
-      {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      }
-    ],
-    "anonymous": false
   },
   {
     "type": "event",
@@ -562,16 +500,46 @@
   },
   {
     "type": "event",
-    "name": "Redeemed",
+    "name": "PredictionCreated",
     "inputs": [
       {
-        "name": "to",
+        "name": "user",
         "type": "address",
         "indexed": true,
         "internalType": "address"
       },
       {
-        "name": "amount",
+        "name": "predictionId",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "targetPrice",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "isAbove",
+        "type": "bool",
+        "indexed": false,
+        "internalType": "bool"
+      },
+      {
+        "name": "expiry",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "tier",
+        "type": "uint8",
+        "indexed": false,
+        "internalType": "enum PredictionBoost.StakeTier"
+      },
+      {
+        "name": "stakeAmount",
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
@@ -581,41 +549,34 @@
   },
   {
     "type": "event",
-    "name": "StrategyUpdated",
+    "name": "PredictionResolved",
     "inputs": [
       {
-        "name": "strategyName",
-        "type": "string",
-        "indexed": false,
-        "internalType": "string"
-      },
-      {
-        "name": "oldAddress",
-        "type": "address",
-        "indexed": false,
-        "internalType": "address"
-      },
-      {
-        "name": "newAddress",
-        "type": "address",
-        "indexed": false,
-        "internalType": "address"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "YieldForwarded",
-    "inputs": [
-      {
-        "name": "yieldManager",
+        "name": "user",
         "type": "address",
         "indexed": true,
         "internalType": "address"
       },
       {
-        "name": "amount",
+        "name": "predictionId",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "won",
+        "type": "bool",
+        "indexed": false,
+        "internalType": "bool"
+      },
+      {
+        "name": "priceAtExpiry",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "newMultiplier",
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
@@ -625,22 +586,22 @@
   },
   {
     "type": "event",
-    "name": "YieldHarvested",
+    "name": "StakeDistributed",
     "inputs": [
       {
-        "name": "strategy",
-        "type": "string",
-        "indexed": true,
-        "internalType": "string"
-      },
-      {
-        "name": "amount",
+        "name": "toYieldPool",
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
       },
       {
-        "name": "timestamp",
+        "name": "toTreasury",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "burned",
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
@@ -650,12 +611,22 @@
   },
   {
     "type": "error",
-    "name": "InsufficientLiquidity",
+    "name": "InsufficientRyBOND",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "InvalidAddress",
+    "name": "InvalidExpiry",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidStakeTier",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "NoPredictionActive",
     "inputs": []
   },
   {
@@ -682,18 +653,27 @@
   },
   {
     "type": "error",
+    "name": "PredictionAlreadyActive",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "PredictionAlreadyResolved",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "PredictionNotExpired",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "ReentrancyGuardReentrantCall",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "SafeERC20FailedOperation",
-    "inputs": [
-      {
-        "name": "token",
-        "type": "address",
-        "internalType": "address"
-      }
-    ]
+    "name": "ZeroAddress",
+    "inputs": []
   }
 ]
