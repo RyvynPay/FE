@@ -6,7 +6,7 @@ export const CONTRACTS = {
   mockUSDC: '0x1DD9b73F49Ad7e9874287f502c6871ce3Df641cC',
   ryUSD: '0x9e94BC6b8D81e94D5272d8e2F2BcCAC267C50E88',
   ryBOND: '0xe01FbFE0ed0B27563869b2495eA77775A7183e5E',
-  ryvynHandler: '0x7E4Dd0624C79DDfBE210F82098A2B2738520E7Ff',
+  ryvynHandler: '0xd5B8Ecb5463E0cD238dD217F256f8EAD2713e791', // Updated: Dual-currency support
   treasuryManager: '0xc6841f2d1900d239579B809b1fc8D1b5D0716Eee',
   yieldManager: '0xEF835c04113FC566028B537B18cA0B1E9d745b80',
 
@@ -22,7 +22,7 @@ export const CONTRACTS = {
   // ========== ryIDR System (IDRX Track) ==========
   mockIDRX: '0x4190dBd17d4719df007ED0a7b2EA0226d96e4fb4',
   ryIDR: '0x5403ff9c5c173eEe01255Eeb4d0925bD21748311',
-  treasuryManagerIDR: '0x45D5dA9360BF4D89e02b4123DEcFE86AFFF4dA3e',
+  treasuryManagerIDR: '0x172B748B60BC0aC2590628024cdfD1D90ce47BfA', // Updated: P2.9 - Fixed hotWallet accounting
   vaultIDRX: '0x42642f6326dBaEA0345e0fB5366850bb17187612',       // 95% IDRX Yield
 
   // ========== Oracle ==========
