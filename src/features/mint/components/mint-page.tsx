@@ -30,7 +30,7 @@ export default function MintPage() {
       </div>
 
       <motion.div
-        className="relative z-10 grid min-h-[calc(100vh-200px)] grid-cols-1 gap-12 lg:grid-cols-2"
+        className="relative z-10 grid min-h-[calc(100vh-200px)] grid-cols-1 lg:gap-12 gap-7 lg:grid-cols-2"
         variants={staggerContainer}
         initial="hidden"
         whileInView="show"
@@ -38,21 +38,16 @@ export default function MintPage() {
       >
         {/* Left Column */}
         <motion.div
-          className="flex flex-col justify-between gap-12 py-8"
+          className="flex flex-col lg:justify-center md:py-8 md:px-0 px-5"
           variants={fadeInItem}
         >
-          {/* Top: Header */}
-          <div>
-            <h1 className="text-2xl font-bold tracking-tighter uppercase sm:text-3xl">
-              Mint Yield-Bearing Stablecoins
-            </h1>
-          </div>
+       
 
           {/* Bottom: Copywriting */}
-          <div className="mt-12 lg:mt-0">
+          <div className="mt-5 lg:mt-0">
             <h2 className="text-3xl leading-tight font-extrabold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
-              UNLOCK THE POWER OF <br className="hidden md:block" />
-              <span className="text-muted-foreground">REAL-WORLD ASSETS.</span>
+               Mint Yield-Bearing <br className="hidden md:block" />
+              <span className="text-muted-foreground">Stablecoins.</span>
             </h2>
             <p className="text-muted-foreground mt-6 text-lg font-medium md:text-xl">
               Mint ryUSD or ryIDR instantly and start earning sustainable,

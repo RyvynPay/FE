@@ -16,7 +16,7 @@ export function PageContainer({
 
       <div
         className={cn(
-          'relative z-10 mx-auto px-3 pt-32 pb-12 md:px-9',
+          'relative z-10 mx-auto px-3 lg:pt-32 pt-22 pb-12 md:px-9',
           className
         )}
         {...props}
