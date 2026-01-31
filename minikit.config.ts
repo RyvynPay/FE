@@ -21,7 +21,7 @@ export const minikitConfig = {
       `${ROOT_URL}/reward.png`,
       `${ROOT_URL}/gamification.png`,
     ],
-    iconUrl: `${ROOT_URL}/logo.png`,
+    iconUrl: `${ROOT_URL}/logo-1024.png`,
     splashImageUrl: `${ROOT_URL}/homepage.png`,
     splashBackgroundColor: '#000000',
     homeUrl: ROOT_URL,
