@@ -1,65 +1,108 @@
-# RYVYN - Stablecoin with Built-in Yield Rewards
+# RYVYN Frontend
 
-A revolutionary stablecoin platform that rewards users on every transfer with real-world asset-backed yields.
+A Next.js 15 frontend for the Ryvyn Protocol — the stablecoin that pays you to use it.
 
 ## Features
 
-- **Instant Transfer Rewards**: Both sender and recipient earn Stream Bonds on every transaction
-- **Real Yield Backing**: Treasury backed by tokenized T-Bills and corporate bonds
-- **Tier System**: Level up through Bronze, Silver, Gold, and Platinum tiers for higher multipliers
-- **Stream Bonds**: Continuous yield streaming tokens that accumulate real value
-- **Transparent Treasury**: Full on-chain visibility of asset allocation and yields
+- **Dual Stablecoin Support** — Mint ryUSD (from USDC) or ryIDR (from IDRX)
+- **Profitable Payments** — Both sender and receiver earn rewards on every transfer
+- **Stream Bonds (ryBOND)** — Real-time streaming rewards, claimable anytime
+- **Prediction Boost** — Gamified yield with Chainlink oracle integration
+- **Treasury Dashboard** — View asset allocation and real-time yields
+- **Transaction History** — Complete log of transfers and rewards
 
 ## Tech Stack
 
-- **Framework**: Next.js 15 with App Router
-- **Styling**: Tailwind CSS with custom animations
-- **Language**: TypeScript
-- **Icons**: Lucide React
+| Category | Technology |
+|----------|------------|
+| Framework | Next.js 15 (App Router, Turbopack) |
+| Language | TypeScript |
+| Styling | Tailwind CSS 4 |
+| Animation | Framer Motion |
+| Auth | Privy |
+| Web3 | wagmi v2 + viem |
+| State | TanStack Query |
+| UI Components | Radix UI + shadcn/ui |
+| Charts | Recharts |
+
+## Project Structure
+
+```
+src/
+├── app/                    # Next.js App Router pages
+│   ├── mint/               # Mint ryUSD/ryIDR
+│   ├── transfer/           # Send payments
+│   ├── boost/              # Prediction market boost
+│   ├── stream-bonds/       # Claim rewards
+│   ├── treasury/           # Treasury dashboard
+│   └── transactions/       # Transaction history
+├── features/               # Feature modules
+│   ├── landing-page/       # Homepage components
+│   ├── mint/               # Minting logic & UI
+│   ├── transfer/           # Transfer logic & UI
+│   ├── gamification/       # Boost/prediction features
+│   ├── reward/             # ryBOND claiming
+│   └── treasury/           # Treasury components
+├── components/             # Shared UI components
+├── hooks/                  # Custom React hooks
+├── config/                 # Contract addresses & config
+├── abis/                   # Smart contract ABIs
+└── lib/                    # Utilities
+```
 
 ## Getting Started
 
-Install dependencies:
+### Prerequisites
+
+- Node.js 18+
+- pnpm (recommended)
+
+### Installation
 
 ```bash
-npm install
+pnpm install
 ```
 
-Run the development server:
+### Environment Variables
+
+Create a `.env.local` file:
+
+```env
+NEXT_PUBLIC_PRIVY_APP_ID=your_privy_app_id
+```
+
+### Development
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-## UI Components
+### Build
 
-- **StatCard**: Display key metrics with gradients and trends
-- **TransferCard**: Send ryUSD with live reward preview
-- **StreamBondsCard**: View and manage your Stream Bonds
-- **TreasuryCard**: Real-time treasury allocation and yields
-- **TierCard**: Track progress through reward tiers
-- **TransactionHistory**: Complete transaction log with rewards
+```bash
+pnpm build
+pnpm start
+```
+
+## Smart Contracts (Base Sepolia)
+
+| Contract | Address |
+|----------|---------|
+| ryUSD | `0x9e94BC6b8D81e94D5272d8e2F2BcCAC267C50E88` |
+| ryIDR | `0x5403ff9c5c173eEe01255Eeb4d0925bD21748311` |
+| ryBOND | `0xB367b39466BE0c5a94DbFCa22bF8A8B356A35a93` |
+| TreasuryManager | `0xc6841f2d1900d239579B809b1fc8D1b5D0716Eee` |
+| YieldManager | `0xEF835c04113FC566028B537B18cA0B1E9d745b80` |
+| PredictionBoost | `0xeAd4547a2b3d7c7D999b59e4966B1264c31A5Ea2` |
 
 ## Design Philosophy
 
-The UI is inspired by Fluidity's clean and modern aesthetic:
-
-- Glass morphism effects
-- Gradient accents
-- Smooth animations
-- Dark theme with pops of color
-- Clear data visualization
-
-## Smart Contract Integration
-
-This is a UI-only implementation. To make it functional, integrate with:
-
-- ryUSD smart contract for token transfers
-- YieldTreasury contract for treasury data
-- StreamBond contract for bond management
-- RewardDistributor for calculating rewards
+- Glass morphism effects with dark theme
+- Smooth scroll animations (Lenis)
+- Real-time data visualization
+- Mobile-responsive layout
 
 ## License
 
