@@ -1,13 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import {
-  DollarSign,
-  Droplets,
-  PieChart,
-  Shield,
-  TrendingUp,
-} from 'lucide-react';
+import { DollarSign, Droplets, Shield, TrendingUp } from 'lucide-react';
 import {
   LiquidityState,
   TreasuryAsset,
@@ -44,12 +38,12 @@ export default function TreasuryStatsCard({
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Top Stats Grid */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="flex justify-between">
           <div className="space-y-1">
             <div className="text-muted-foreground flex items-center gap-2 text-sm">
               <DollarSign className="h-4 w-4" /> Total Value
             </div>
-            <p className="text-2xl font-bold">
+            <p className="text-center text-2xl font-bold">
               {formatCompactNumber(liquidity.totalTvl)}
             </p>
           </div>
@@ -57,23 +51,15 @@ export default function TreasuryStatsCard({
             <div className="text-muted-foreground flex items-center gap-2 text-sm">
               <TrendingUp className="h-4 w-4" /> Current Yield
             </div>
-            <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+            <p className="text-center text-2xl font-bold text-purple-600 dark:text-purple-400">
               {yieldMetrics.currentApy}%
-            </p>
-          </div>
-          <div className="space-y-1">
-            <div className="text-muted-foreground flex items-center gap-2 text-sm">
-              <PieChart className="h-4 w-4" /> 7-Day Volume
-            </div>
-            <p className="text-2xl font-bold">
-              ${(yieldMetrics.sevenDayVolume || 0).toLocaleString()}
             </p>
           </div>
           <div className="space-y-1">
             <div className="text-muted-foreground flex items-center gap-2 text-sm">
               <Shield className="h-4 w-4" /> Utilization Rate
             </div>
-            <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+            <p className="text-center text-2xl font-bold text-green-600 dark:text-green-400">
               {yieldMetrics.utilizationRate}%
             </p>
           </div>
@@ -111,36 +97,14 @@ export default function TreasuryStatsCard({
             </div>
           </div>
 
-          {/* OUSG */}
-          {assets.find(a => a.id === 'ousg') && (
+          {/* USYC */}
+          {assets.find(a => a.id === 'usyc') && (
             <div className="space-y-2">
               <div className="flex justify-between text-xs">
-                <span className="text-muted-foreground">Ondo OUSG</span>
+                <span className="text-muted-foreground">USYC Vault</span>
                 <span className="font-mono">
                   {formatCompactNumber(
-                    assets.find(a => a.id === 'ousg')?.value || 0
-                  )}
-                </span>
-              </div>
-              <div className="bg-secondary relative h-2 w-full overflow-hidden rounded-full">
-                <div
-                  className="h-full w-full flex-1 bg-purple-500 transition-all"
-                  style={{
-                    transform: `translateX(-${100 - ((assets.find(a => a.id === 'ousg')?.value || 0) / totalTvl) * 100}%)`,
-                  }}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* USDY */}
-          {assets.find(a => a.id === 'usdy') && (
-            <div className="space-y-2">
-              <div className="flex justify-between text-xs">
-                <span className="text-muted-foreground">Ondo USDY</span>
-                <span className="font-mono">
-                  {formatCompactNumber(
-                    assets.find(a => a.id === 'usdy')?.value || 0
+                    assets.find(a => a.id === 'usyc')?.value || 0
                   )}
                 </span>
               </div>
@@ -148,30 +112,78 @@ export default function TreasuryStatsCard({
                 <div
                   className="h-full w-full flex-1 bg-blue-500 transition-all"
                   style={{
-                    transform: `translateX(-${100 - ((assets.find(a => a.id === 'usdy')?.value || 0) / totalTvl) * 100}%)`,
+                    transform: `translateX(-${100 - ((assets.find(a => a.id === 'usyc')?.value || 0) / totalTvl) * 100}%)`,
                   }}
                 />
               </div>
             </div>
           )}
 
-          {/* Lending Strategy */}
-          <div className="space-y-2">
-            <div className="flex justify-between text-xs">
-              <span className="text-muted-foreground">Lending (Invested)</span>
-              <span className="font-mono">
-                {formatCompactNumber(lendingStrategy.value)}
-              </span>
+          {/* Aave */}
+          {assets.find(a => a.id === 'aave') && (
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs">
+                <span className="text-muted-foreground">Aave Lending</span>
+                <span className="font-mono">
+                  {formatCompactNumber(
+                    assets.find(a => a.id === 'aave')?.value || 0
+                  )}
+                </span>
+              </div>
+              <div className="bg-secondary relative h-2 w-full overflow-hidden rounded-full">
+                <div
+                  className="h-full w-full flex-1 bg-purple-500 transition-all"
+                  style={{
+                    transform: `translateX(-${100 - ((assets.find(a => a.id === 'aave')?.value || 0) / totalTvl) * 100}%)`,
+                  }}
+                />
+              </div>
             </div>
-            <div className="bg-secondary relative h-2 w-full overflow-hidden rounded-full">
-              <div
-                className="h-full w-full flex-1 bg-amber-500 transition-all"
-                style={{
-                  transform: `translateX(-${100 - (lendingPercent || 0)}%)`,
-                }}
-              />
+          )}
+
+          {/* Aerodrome */}
+          {assets.find(a => a.id === 'aerodrome') && (
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs">
+                <span className="text-muted-foreground">Aerodrome LP</span>
+                <span className="font-mono">
+                  {formatCompactNumber(
+                    assets.find(a => a.id === 'aerodrome')?.value || 0
+                  )}
+                </span>
+              </div>
+              <div className="bg-secondary relative h-2 w-full overflow-hidden rounded-full">
+                <div
+                  className="h-full w-full flex-1 bg-amber-500 transition-all"
+                  style={{
+                    transform: `translateX(-${100 - ((assets.find(a => a.id === 'aerodrome')?.value || 0) / totalTvl) * 100}%)`,
+                  }}
+                />
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* Thetanuts */}
+          {assets.find(a => a.id === 'thetanuts') && (
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs">
+                <span className="text-muted-foreground">Thetanuts Options</span>
+                <span className="font-mono">
+                  {formatCompactNumber(
+                    assets.find(a => a.id === 'thetanuts')?.value || 0
+                  )}
+                </span>
+              </div>
+              <div className="bg-secondary relative h-2 w-full overflow-hidden rounded-full">
+                <div
+                  className="h-full w-full flex-1 bg-green-500 transition-all"
+                  style={{
+                    transform: `translateX(-${100 - ((assets.find(a => a.id === 'thetanuts')?.value || 0) / totalTvl) * 100}%)`,
+                  }}
+                />
+              </div>
+            </div>
+          )}
 
           <div
             className={cn(

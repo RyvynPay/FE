@@ -7,11 +7,12 @@ import { fadeInItem, staggerContainer } from '@/lib/animations';
 import { motion } from 'motion/react';
 import { useTreasuryData } from '../hooks/use-treasury-data';
 import AssetAllocationChart from './asset-allocation-chart';
-import RewardFormulaBreakdown from './reward-formula-breakdown';
 import TreasuryStatsCard from './treasury-stats-card';
 
 export default function TreasuryPage() {
   const { assets, liquidity, yieldMetrics, isLoading } = useTreasuryData();
+
+  console.log(yieldMetrics);
 
   if (isLoading) {
     return (
@@ -26,7 +27,7 @@ export default function TreasuryPage() {
             </div>
           </div>
           <div className="flex flex-col justify-end">
-            <div className="flex items-center justify-center p-6 lg:justify-end">
+            <div className="flex items-center justify-center px-4 lg:justify-end lg:p-6">
               <Skeleton className="h-[500px] w-[500px] rounded-full" />
             </div>
           </div>
@@ -73,14 +74,14 @@ export default function TreasuryPage() {
         viewport={{ once: true }}
       >
         {/* Top Section: Big Text & Chart */}
-        <motion.div className="pt-12" variants={fadeInItem}>
-          <div className="flex flex-col py-8">
+        <motion.div variants={fadeInItem}>
+          <div className="flex flex-col px-4 lg:px-0 lg:py-8">
             <div className="mt-12 lg:mt-0">
               <h2 className="text-3xl leading-tight font-extrabold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
                 TRANSPARENCY <br className="hidden md:block" />
                 <span className="text-muted-foreground">BUILDS TRUST.</span>
               </h2>
-              <p className="text-muted-foreground mt-6 text-lg font-medium md:text-xl">
+              <p className="text-muted-foreground text-lg font-medium md:text-xl lg:mt-6">
                 Verifiable on-chain assets backing every ryUSD in circulation.
               </p>
             </div>
@@ -88,10 +89,10 @@ export default function TreasuryPage() {
         </motion.div>
 
         <motion.div>
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-12">
             {/* Left: Chart */}
             <div className="flex flex-col justify-end">
-              <div className="flex items-center justify-center p-6 lg:justify-end">
+              <div className="flex items-center justify-center px-4 lg:justify-end lg:p-6">
                 <div className="w-full max-w-xl">
                   <AssetAllocationChart assets={assets} />
                 </div>
@@ -107,11 +108,6 @@ export default function TreasuryPage() {
               />
             </div>
           </div>
-        </motion.div>
-
-        {/* Formula Breakdown Section */}
-        <motion.div className="py-12" variants={fadeInItem}>
-          <RewardFormulaBreakdown />
         </motion.div>
       </motion.div>
     </PageContainer>
