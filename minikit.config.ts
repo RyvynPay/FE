@@ -1,6 +1,8 @@
-const ROOT_URL = process.env.NEXT_PUBLIC_URL
-  ? `https://${process.env.NEXT_PUBLIC_URL}`
-  : 'http://localhost:3000';
+const ROOT_URL =
+  process.env.NEXT_PUBLIC_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : 'http://localhost:3000');
 
 export const minikitConfig = {
   accountAssociation: {
@@ -17,22 +19,22 @@ export const minikitConfig = {
     description:
       'Continuous streaming yields on USDC & IDRX without locking funds. Claim anytime or accelerate rewards via gamified predictions',
     screenshotUrls: [
-      `${ROOT_URL}/transfer.png`,
-      `${ROOT_URL}/reward.png`,
-      `${ROOT_URL}/gamification.png`,
+      `${ROOT_URL}/pages/transfer.png`,
+      `${ROOT_URL}/pages/reward.png`,
+      `${ROOT_URL}/pages/gamification.png`,
     ],
     iconUrl: `${ROOT_URL}/logo-1024.png`,
-    splashImageUrl: `${ROOT_URL}/homepage.png`,
+    splashImageUrl: `${ROOT_URL}/pages/homepage.png`,
     splashBackgroundColor: '#000000',
     homeUrl: ROOT_URL,
     webhookUrl: `${ROOT_URL}/api/webhook`,
     primaryCategory: 'finance',
     tags: ['stablecoin', 'gamified', 'rewards', 'yield'],
-    heroImageUrl: `${ROOT_URL}/homepage.png`,
+    heroImageUrl: `${ROOT_URL}/pages/homepage.png`,
     tagline: 'Earn on Every Transfer',
     ogTitle: 'Ryvyn Pay',
     ogDescription:
       'Liquid streaming yield. No locks. Boost via gamified predictions.',
-    ogImageUrl: `${ROOT_URL}/homepage.png`,
+    ogImageUrl: `${ROOT_URL}/pages/homepage.png`,
   },
 } as const;
