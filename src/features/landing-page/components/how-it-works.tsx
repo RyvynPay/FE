@@ -8,25 +8,25 @@ const steps = [
     id: '01',
     title: 'Deposit & Mint',
     description:
-      'Deposit your idle USDC or USDT into the Ryvyn Protocol. We instantly mint ryUSD at a 1:1 ratio, giving you a liquid, yield-bearing token.',
+      'Deposit USDC or IDRX into Ryvyn. We instantly mint ryUSD (USD) or ryIDR (IDR) at a 1:1 ratio.\n\nYour money stays liquid, transferable, and productive from the first second.',
   },
   {
     id: '02',
-    title: 'RWA Deployment',
+    title: 'Smart Treasury Engine',
     description:
-      'Your assets are automatically allocated into a diversified portfolio of Real World Assets, primarily ultra-safe US Treasury Bills and corporate bonds.',
+      'Deposited funds are automatically managed by Ryvyn’s onchain treasury engine, abstracting complex yield strategies away from the user.\n\nNo yield chasing. No manual rebalancing.',
   },
   {
     id: '03',
-    title: 'Make Transactions',
+    title: 'Profitable Payments',
     description:
-      'Every transaction earns a reward, split between sender and receiver.',
+      'Sending or receiving ryUSD or ryIDR earns rewards for both sides.\n\nThe longer funds are held, the greater the reward share when transferred.',
   },
   {
     id: '04',
-    title: 'Yield Generation',
+    title: 'Streaming Rewards',
     description:
-      'The underlying assets generate consistent, risk-free interest. Unlike speculative tokens, this yield comes from established financial markets.',
+      'Rewards stream in real time as ryBOND and vest linearly every second.\n\nUsers can claim anytime as ryUSD or ryIDR — no lockups, no staking.',
   },
 ];
 

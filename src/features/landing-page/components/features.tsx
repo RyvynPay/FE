@@ -6,9 +6,9 @@ import { useRef } from 'react';
 const FEATURES = [
   {
     id: '01',
-    title: 'REAL WORLD ASSETS',
+    title: 'SMART TREASURY ENGINE',
     description:
-      "Ryvyn turns 'Idle Money' into 'Working Capital' without speculative risk. Backed by real world assets.",
+      "Ryvyn automatically manages deposited stablecoins through onchain treasury strategies, so users don't need to chase yield or manage positions themselves.",
     color: '#4c1d95', // violet-900
   },
   {
