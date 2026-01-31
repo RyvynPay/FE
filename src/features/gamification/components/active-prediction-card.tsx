@@ -29,10 +29,6 @@ const TIER_CONFIG = [
 function formatToJakartaTime(timestamp: number): string {
   const date = new Date(timestamp * 1000);
 
-  // Convert to Jakarta time (UTC+7)
-  const jakartaTime = new Date(date.getTime() + 7 * 60 * 60 * 1000);
-
-  // Format: "31 Jan 2026, 14:30 WIB"
   const options: Intl.DateTimeFormatOptions = {
     timeZone: 'Asia/Jakarta',
     day: '2-digit',
@@ -43,7 +39,7 @@ function formatToJakartaTime(timestamp: number): string {
     hour12: false,
   };
 
-  const formatted = jakartaTime.toLocaleString('en-GB', options);
+  const formatted = date.toLocaleString('en-GB', options);
   return `${formatted} WIB`;
 }
 
@@ -63,6 +59,8 @@ export default function ActivePredictionCard({
   currentETHPrice,
 }: ActivePredictionCardProps) {
   const tierInfo = TIER_CONFIG[activePrediction.tier] || TIER_CONFIG[0];
+
+  console.log(activePrediction);
 
   // For resolved predictions, use the won field from the contract
   // For active predictions, calculate current position based on price
@@ -289,10 +287,11 @@ export default function ActivePredictionCard({
       </CardContent>
       {canResolve && !activePrediction.resolved && (
         <CardFooter className="flex-col gap-3">
-          <div className="w-full rounded-lg bg-primary/10 border border-primary p-3 text-sm">
+          <div className="bg-primary/10 border-primary w-full rounded-lg border p-3 text-sm">
             <p className="font-semibold">⏰ Time to resolve!</p>
-            <p className="text-muted-foreground text-xs mt-1">
-              Click below to finalize the prediction. Your multiplier will {isWinning ? 'boost' : 'reduce'} after resolving.
+            <p className="text-muted-foreground mt-1 text-xs">
+              Click below to finalize the prediction. Your multiplier will{' '}
+              {isWinning ? 'boost' : 'reduce'} after resolving.
             </p>
           </div>
           <Button className="w-full" onClick={onResolve} disabled={isResolving}>
