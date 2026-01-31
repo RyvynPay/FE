@@ -76,7 +76,6 @@ function Card({
   progress,
   range,
   index,
-  total,
 }: {
   feature: (typeof FEATURES)[0];
   progress: MotionValue<number>;
