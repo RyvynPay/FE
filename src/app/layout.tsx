@@ -19,19 +19,13 @@ const outfit = Outfit({
   variable: '--font-outfit',
 });
 
-export const metadata: Metadata = {
-  title: 'RYVYN | Stablecoin with Built-in Yield Rewards',
-  description:
-    'Earn rewards on every transfer. The stablecoin that pays you to use it.',
-  icons: {
-    icon: '/logo.png',
-  },
-};
-
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: miniapp.ogTitle,
     description: miniapp.ogDescription,
+    icons: {
+      icon: '/logo.png',
+    },
     openGraph: {
       title: miniapp.ogTitle,
       description: miniapp.ogDescription,
