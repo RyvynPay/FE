@@ -32,7 +32,7 @@ export const minikitConfig = {
     tagline: 'Earn on Every Transfer',
     ogTitle: 'Ryvyn Pay',
     ogDescription:
-      'Continuous streaming yields on USDC & IDRX without locking funds. Claim anytime or accelerate rewards via gamified predictions',
+      'Liquid streaming yield. No locks. Boost via gamified predictions.',
     ogImageUrl: `${ROOT_URL}/homepage.png`,
   },
 } as const;
