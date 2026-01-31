@@ -3,16 +3,27 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { usePrivy, useWallets } from '@privy-io/react-auth';
-import { Loader2, LogOut, Wallet } from 'lucide-react';
+import { Droplet, Loader2, LogOut, Wallet } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { useState } from 'react';
+import { Faucet } from '@/features/mint/components/faucet';
 
 export function WalletConnect() {
   const pathname = usePathname();
   const { ready, authenticated, login, logout, linkWallet } = usePrivy();
+  const [faucetOpen, setFaucetOpen] = useState(false);
 
   const { wallets } = useWallets();
 
@@ -47,33 +58,52 @@ export function WalletConnect() {
 
   if (authenticated && connectedWallet) {
     return (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            className={cn(
-              'h-12 rounded-full border px-6 text-base font-medium',
-              isHome
-                ? 'border-secondary/20 bg-secondary/10 text-secondary hover:bg-secondary/20'
-                : 'border-white/10 bg-white/10 text-white hover:bg-white/20'
-            )}
-          >
-            <Wallet className="mr-2 h-4 w-4" />
-            <span className="font-mono">
-              {formatAddress(connectedWallet.address)}
-            </span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-56">
-          <DropdownMenuItem
-            onClick={handleLogout}
-            className="text-red-600 focus:text-red-600"
-          >
-            <LogOut className="mr-2 h-4 w-4" />
-            <span>Disconnect</span>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className={cn(
+                'h-12 rounded-full border px-6 text-base font-medium',
+                isHome
+                  ? 'border-secondary/20 bg-secondary/10 text-secondary hover:bg-secondary/20'
+                  : 'border-white/10 bg-white/10 text-white hover:bg-white/20'
+              )}
+            >
+              <Wallet className="mr-2 h-4 w-4" />
+              <span className="font-mono">
+                {formatAddress(connectedWallet.address)}
+              </span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuItem onClick={() => setFaucetOpen(true)}>
+              <Droplet className="mr-2 h-4 w-4" />
+              <span>Testnet Faucet</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="text-destructive focus:text-destructive"
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Disconnect</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <Dialog open={faucetOpen} onOpenChange={setFaucetOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Testnet Faucet</DialogTitle>
+              <DialogDescription>
+                Get free test tokens for Base Sepolia testnet
+              </DialogDescription>
+            </DialogHeader>
+            <Faucet />
+          </DialogContent>
+        </Dialog>
+      </>
     );
   }
 
