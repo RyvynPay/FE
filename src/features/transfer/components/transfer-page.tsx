@@ -2,7 +2,7 @@
 
 import PixelBlast from '@/components/PixelBlast';
 import { PageContainer } from '@/components/page-container';
-import TransferRyUSD from '@/features/transfer/components/transfer-ry-usd';
+import { UniversalTransfer } from '@/features/transfer/components/universal-transfer';
 import { fadeInItem, staggerContainer } from '@/lib/animations';
 import { motion } from 'motion/react';
 
@@ -30,7 +30,7 @@ export default function TransferPage() {
       </div>
 
       <motion.div
-        className="relative z-10 grid min-h-[calc(100vh-200px)] grid-cols-1 gap-12 lg:grid-cols-2"
+        className="relative z-10 grid min-h-[calc(100vh-200px)] grid-cols-1 lg:gap-12 gap-7 lg:grid-cols-2"
         variants={staggerContainer}
         initial="hidden"
         whileInView="show"
@@ -38,24 +38,17 @@ export default function TransferPage() {
       >
         {/* Left Column */}
         <motion.div
-          className="flex flex-col justify-between py-8"
+          className="flex flex-col lg:justify-center md:py-8 md:px-0 px-5"
           variants={fadeInItem}
         >
-          {/* Top: Header */}
-          <div>
-            <h1 className="text-2xl font-bold tracking-tighter uppercase sm:text-3xl">
-              Transfer ryUSD
-            </h1>
-          </div>
-
           {/* Bottom: Copywriting */}
-          <div className="mt-12 lg:mt-0">
+          <div className="mt-5 lg:mt-0">
             <h2 className="text-3xl leading-tight font-extrabold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
               TRANSFER AND EARN <br className="hidden md:block" />
-              <span className="text-muted-foreground">REAL-WORLD YIELD.</span>
+              <span className="text-muted-foreground">ryBOND.</span>
             </h2>
             <p className="text-muted-foreground mt-6 text-lg font-medium md:text-xl">
-              Transfer ryUSD instantly to anyone and earn Stream Bonds rewards
+              Transfer ryUSD or ryIDR instantly to anyone and earn Stream Bonds rewards
               on every transaction.
             </p>
           </div>
@@ -63,11 +56,11 @@ export default function TransferPage() {
 
         {/* Right Column: Transfer Card */}
         <motion.div
-          className="flex items-center justify-center lg:items-end lg:justify-end"
+          className="flex items-center justify-center lg:justify-end"
           variants={fadeInItem}
         >
           <div className="w-full max-w-md">
-            <TransferRyUSD />
+            <UniversalTransfer />
           </div>
         </motion.div>
       </motion.div>

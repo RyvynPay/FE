@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react';
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useState } from 'react';
+import { useAccount, useReadContract, useWriteContract } from 'wagmi';
 import { Currency } from '@/types/currency';
 import { CURRENCY_CONFIGS } from '@/config/currencies';
 import { CONTRACTS, BASE_SEPOLIA_CHAIN_ID } from '@/config/contracts';
 import { parseUnits, formatUnits, isAddress } from 'viem';
 import RyUSDABI from '@/abis/RyUSD.json';
 import RyvynHandlerABI from '@/abis/RyvynHandler.json';
+import { readContract } from 'wagmi/actions';
+import { config as wagmiConfig } from '@/lib/wagmi';
 
 interface RewardPreview {
   senderReward: string;
@@ -19,6 +21,7 @@ export function useUniversalTransfer(currency: Currency) {
   const config = CURRENCY_CONFIGS[currency];
 
   const [rewardPreview, setRewardPreview] = useState<RewardPreview | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Read balance
   const { data: balance, refetch: refetchBalance } = useReadContract({
@@ -32,25 +35,45 @@ export function useUniversalTransfer(currency: Currency) {
   const {
     writeContractAsync,
     isPending,
-    data: txHash,
-    error,
   } = useWriteContract();
 
-  const {
-    isLoading: isConfirming,
-    isSuccess,
-  } = useWaitForTransactionReceipt({
-    hash: txHash,
-  });
+  // Helper to wait for transaction confirmation
+  const waitForTransaction = async (hash: `0x${string}` | undefined): Promise<void> => {
+    if (!hash) return;
 
-  // Refetch balance on success
-  useEffect(() => {
-    if (isSuccess) {
-      refetchBalance();
+    let attempts = 0;
+    const maxAttempts = 60;
+
+    while (attempts < maxAttempts) {
+      try {
+        const receipt = await fetch(
+          `https://base-sepolia.blockscout.com/api/v2/transactions/${hash}`
+        ).then(res => res.json());
+
+        if (receipt.status === 'ok' || receipt.result?.status === '1') {
+          return;
+        }
+
+        if (receipt.status === 'error' || receipt.result?.status === '0') {
+          throw new Error('Transaction reverted on-chain');
+        }
+
+        if (receipt.result && receipt.result.status === 'error') {
+          throw new Error(receipt.result.message || 'Transaction failed');
+        }
+      } catch (e: any) {
+        if (e.message?.includes('Transaction') || e.message?.includes('reverted')) {
+          throw e;
+        }
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      attempts++;
     }
-  }, [isSuccess, refetchBalance]);
 
-  // Preview transfer rewards (shared RyvynHandler for both currencies)
+    throw new Error('Transaction confirmation timeout - please check block explorer');
+  };
+
   const previewRewards = async (recipient: string, amount: string) => {
     if (!address || !isAddress(recipient) || !amount || Number(amount) === 0) {
       setRewardPreview(null);
@@ -60,15 +83,21 @@ export function useUniversalTransfer(currency: Currency) {
     try {
       const amountBigInt = parseUnits(amount, config.decimals);
 
-      // Fallback: Just show estimated split
-      const senderRewardEst = (BigInt(amountBigInt.toString()) * BigInt(70)) / BigInt(100);
-      const receiverRewardEst = (BigInt(amountBigInt.toString()) * BigInt(30)) / BigInt(100);
+      const result = await readContract(wagmiConfig, {
+        address: CONTRACTS.ryvynHandler,
+        abi: RyvynHandlerABI,
+        functionName: 'previewTransferRewards',
+        args: [address, config.stablecoin, amountBigInt],
+        chainId: BASE_SEPOLIA_CHAIN_ID,
+      }) as [bigint, bigint, bigint, bigint];
+
+      const [senderReward, receiverReward, senderShare, receiverShare] = result;
 
       setRewardPreview({
-        senderReward: formatUnits(senderRewardEst, 6),
-        receiverReward: formatUnits(receiverRewardEst, 6),
-        senderShare: '70',
-        receiverShare: '30',
+        senderReward: formatUnits(senderReward, 6),
+        receiverReward: formatUnits(receiverReward, 6),
+        senderShare: senderShare.toString(),
+        receiverShare: receiverShare.toString(),
       });
     } catch (err) {
       console.error('Failed to preview rewards:', err);
@@ -80,12 +109,39 @@ export function useUniversalTransfer(currency: Currency) {
     if (!address) throw new Error('Wallet not connected');
     if (!isAddress(to)) throw new Error('Invalid recipient address');
 
-    await writeContractAsync({
-      address: config.stablecoin,  // ryUSD or ryIDR
-      abi: RyUSDABI,
-      functionName: 'transfer',
-      args: [to, parseUnits(amount, config.decimals)],
-    });
+    setIsProcessing(true);
+
+    try {
+      const transferTxHash = await writeContractAsync({
+        address: config.stablecoin,  // ryUSD or ryIDR
+        abi: RyUSDABI,
+        functionName: 'transfer',
+        args: [to, parseUnits(amount, config.decimals)],
+      });
+
+      // Wait for transfer transaction to be confirmed
+      console.log('Waiting for transfer transaction:', transferTxHash);
+      await waitForTransaction(transferTxHash);
+      console.log('Transfer confirmed');
+
+      // Refetch balance after successful transfer
+      await refetchBalance();
+    } catch (error: any) {
+      // Check if user rejected transaction
+      if (error.message?.includes('User rejected') ||
+          error.message?.includes('user rejected') ||
+          error.message?.includes('User denied') ||
+          error.code === 4001 ||
+          error.code === 'ACTION_REJECTED') {
+        throw new Error('Transaction rejected by user');
+      }
+
+      // Extract readable error message
+      const errorMsg = error.shortMessage || error.message || 'Unknown error';
+      throw new Error(`Transfer failed: ${errorMsg}`);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return {
@@ -94,9 +150,8 @@ export function useUniversalTransfer(currency: Currency) {
     previewRewards,
     transfer,
     isPending,
-    isConfirming,
-    isSuccess,
-    error,
+    isProcessing,
+    isLoading: isPending || isProcessing,
     refetchBalance,
   };
 }
