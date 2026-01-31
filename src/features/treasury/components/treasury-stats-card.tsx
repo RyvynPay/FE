@@ -35,8 +35,6 @@ export default function TreasuryStatsCard({
     return `${symbol}${num.toFixed(2)}`;
   };
 
-  console.log('aasda', hotWallet);
-
   return (
     <Card className="h-full">
       <CardHeader>

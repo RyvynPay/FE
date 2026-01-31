@@ -58,7 +58,6 @@ export function useTreasuryData(): UseTreasuryDataReturn {
   const { stats: yieldManagerStats, isLoading: isLoadingYieldManager } =
     useYieldManagerData();
 
-  console.log('aaa', yieldManagerStats);
   const { info: treasuryInfo, isLoading: isLoadingTreasury } =
     useTreasuryManagerData();
   const { info: treasuryIDRInfo, isLoading: isLoadingTreasuryIDR } =

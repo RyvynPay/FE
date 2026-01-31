@@ -27,10 +27,6 @@ export default function TreasuryPage() {
   const currentLiquidity =
     currency === Currency.USD ? usdLiquidity : idrLiquidity;
 
-  console.log(idrAssets);
-
-  console.log(yieldMetrics);
-
   if (isLoading) {
     return (
       <PageContainer>

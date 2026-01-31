@@ -1,37 +1,46 @@
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { Currency } from '@/types/currency';
-import { CURRENCY_CONFIGS } from '@/config/currencies';
-import { parseUnits, formatUnits } from 'viem';
+import ERC20ABI from '@/abis/MockUSDC.json'; // Same ABI for USDC/IDRX
+import RyUSDABI from '@/abis/RyUSD.json'; // Same ABI for ryUSD/ryIDR
 import { BASE_SEPOLIA_CHAIN_ID } from '@/config/contracts';
+import { CURRENCY_CONFIGS } from '@/config/currencies';
+import { Currency } from '@/types/currency';
 import { useEffect, useState } from 'react';
-import ERC20ABI from '@/abis/MockUSDC.json';  // Same ABI for USDC/IDRX
-import RyUSDABI from '@/abis/RyUSD.json';     // Same ABI for ryUSD/ryIDR
+import { formatUnits, parseUnits } from 'viem';
+import {
+  useAccount,
+  useReadContract,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from 'wagmi';
 
 export function useUniversalMint(currency: Currency) {
   const { address } = useAccount();
   const config = CURRENCY_CONFIGS[currency];
 
   // Track current step for combined approve + deposit
-  const [currentStep, setCurrentStep] = useState<'idle' | 'approving' | 'depositing'>('idle');
+  const [currentStep, setCurrentStep] = useState<
+    'idle' | 'approving' | 'depositing'
+  >('idle');
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Read underlying balance (USDC or IDRX)
-  const { data: underlyingBalance, refetch: refetchUnderlying } = useReadContract({
-    address: config.underlyingToken,
-    abi: ERC20ABI,
-    functionName: 'balanceOf',
-    args: address ? [address] : undefined,
-    chainId: BASE_SEPOLIA_CHAIN_ID,
-  });
+  const { data: underlyingBalance, refetch: refetchUnderlying } =
+    useReadContract({
+      address: config.underlyingToken,
+      abi: ERC20ABI,
+      functionName: 'balanceOf',
+      args: address ? [address] : undefined,
+      chainId: BASE_SEPOLIA_CHAIN_ID,
+    });
 
   // Read stablecoin balance (ryUSD or ryIDR)
-  const { data: stablecoinBalance, refetch: refetchStablecoin } = useReadContract({
-    address: config.stablecoin,
-    abi: RyUSDABI,
-    functionName: 'balanceOf',
-    args: address ? [address] : undefined,
-    chainId: BASE_SEPOLIA_CHAIN_ID,
-  });
+  const { data: stablecoinBalance, refetch: refetchStablecoin } =
+    useReadContract({
+      address: config.stablecoin,
+      abi: RyUSDABI,
+      functionName: 'balanceOf',
+      args: address ? [address] : undefined,
+      chainId: BASE_SEPOLIA_CHAIN_ID,
+    });
 
   // Read allowance
   const { data: allowance, refetch: refetchAllowance } = useReadContract({
@@ -49,16 +58,15 @@ export function useUniversalMint(currency: Currency) {
     error,
   } = useWriteContract();
 
-  const {
-    isLoading: isConfirming,
-    isSuccess,
-  } = useWaitForTransactionReceipt({
+  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
     hash: txHash,
     chainId: BASE_SEPOLIA_CHAIN_ID,
   });
 
   // Helper to wait for transaction confirmation
-  const waitForTransaction = async (hash: `0x${string}` | undefined): Promise<void> => {
+  const waitForTransaction = async (
+    hash: `0x${string}` | undefined
+  ): Promise<void> => {
     if (!hash) return;
 
     // Poll for transaction receipt
@@ -87,7 +95,10 @@ export function useUniversalMint(currency: Currency) {
         }
       } catch (e: any) {
         // If it's a transaction failure, re-throw it
-        if (e.message?.includes('Transaction') || e.message?.includes('reverted')) {
+        if (
+          e.message?.includes('Transaction') ||
+          e.message?.includes('reverted')
+        ) {
           throw e;
         }
         // Otherwise continue polling (network error, etc.)
@@ -98,7 +109,9 @@ export function useUniversalMint(currency: Currency) {
     }
 
     // Timeout - throw error instead of silent fallback
-    throw new Error('Transaction confirmation timeout - please check block explorer');
+    throw new Error(
+      'Transaction confirmation timeout - please check block explorer'
+    );
   };
 
   // Refetch balances on success
@@ -147,9 +160,7 @@ export function useUniversalMint(currency: Currency) {
       });
 
       // Wait for withdrawal transaction to be confirmed
-      console.log('Waiting for withdrawal transaction:', withdrawTxHash);
       await waitForTransaction(withdrawTxHash);
-      console.log('Withdrawal confirmed');
 
       // Refetch balances after successful withdrawal
       await refetchUnderlying();
@@ -157,11 +168,13 @@ export function useUniversalMint(currency: Currency) {
       await refetchAllowance();
     } catch (error: any) {
       // Check if user rejected transaction
-      if (error.message?.includes('User rejected') ||
-          error.message?.includes('user rejected') ||
-          error.message?.includes('User denied') ||
-          error.code === 4001 ||
-          error.code === 'ACTION_REJECTED') {
+      if (
+        error.message?.includes('User rejected') ||
+        error.message?.includes('user rejected') ||
+        error.message?.includes('User denied') ||
+        error.code === 4001 ||
+        error.code === 'ACTION_REJECTED'
+      ) {
         throw new Error('Transaction rejected by user');
       }
 
@@ -182,7 +195,9 @@ export function useUniversalMint(currency: Currency) {
     setIsProcessing(true);
     try {
       const amountBigInt = parseUnits(amount, config.decimals);
-      const currentAllowance = allowance ? BigInt(allowance.toString()) : BigInt(0);
+      const currentAllowance = allowance
+        ? BigInt(allowance.toString())
+        : BigInt(0);
 
       // Step 1: Approve if needed
       if (currentAllowance < amountBigInt) {
@@ -196,21 +211,23 @@ export function useUniversalMint(currency: Currency) {
           });
 
           // Wait for approval transaction to be confirmed
-          console.log('Waiting for approval transaction:', approveTxHash);
           await waitForTransaction(approveTxHash);
           await refetchAllowance();
-          console.log('Approval confirmed');
         } catch (approveError: any) {
           setCurrentStep('idle');
           // Check if user rejected transaction
-          if (approveError.message?.includes('User rejected') ||
-              approveError.message?.includes('user rejected') ||
-              approveError.message?.includes('User denied') ||
-              approveError.code === 4001 ||
-              approveError.code === 'ACTION_REJECTED') {
+          if (
+            approveError.message?.includes('User rejected') ||
+            approveError.message?.includes('user rejected') ||
+            approveError.message?.includes('User denied') ||
+            approveError.code === 4001 ||
+            approveError.code === 'ACTION_REJECTED'
+          ) {
             throw new Error('Transaction rejected by user');
           }
-          throw new Error(`Approval failed: ${approveError.shortMessage || approveError.message || 'Unknown error'}`);
+          throw new Error(
+            `Approval failed: ${approveError.shortMessage || approveError.message || 'Unknown error'}`
+          );
         }
       }
 
@@ -225,9 +242,7 @@ export function useUniversalMint(currency: Currency) {
         });
 
         // Wait for deposit transaction to be confirmed
-        console.log('Waiting for deposit transaction:', depositTxHash);
         await waitForTransaction(depositTxHash);
-        console.log('Deposit confirmed');
 
         if (!depositTxHash) {
           throw new Error('Transaction failed to submit');
@@ -237,27 +252,32 @@ export function useUniversalMint(currency: Currency) {
         await refetchUnderlying();
         await refetchStablecoin();
         await refetchAllowance();
-
       } catch (depositError: any) {
         setCurrentStep('idle');
         // Check if user rejected transaction
-        if (depositError.message?.includes('User rejected') ||
-            depositError.message?.includes('user rejected') ||
-            depositError.message?.includes('User denied') ||
-            depositError.code === 4001 ||
-            depositError.code === 'ACTION_REJECTED') {
+        if (
+          depositError.message?.includes('User rejected') ||
+          depositError.message?.includes('user rejected') ||
+          depositError.message?.includes('User denied') ||
+          depositError.code === 4001 ||
+          depositError.code === 'ACTION_REJECTED'
+        ) {
           throw new Error('Transaction rejected by user');
         }
         // Check for contract-specific errors
-        if (depositError.message?.includes('Only ryUSD can call') ||
-            depositError.message?.includes('OnlyRyUSDCanCall')) {
-          throw new Error('Contract error: ryIDR is not yet authorized. Please use ryUSD for now.');
+        if (
+          depositError.message?.includes('Only ryUSD can call') ||
+          depositError.message?.includes('OnlyRyUSDCanCall')
+        ) {
+          throw new Error(
+            'Contract error: ryIDR is not yet authorized. Please use ryUSD for now.'
+          );
         }
         // Extract readable error message
-        const errorMsg = depositError.shortMessage || depositError.message || 'Unknown error';
+        const errorMsg =
+          depositError.shortMessage || depositError.message || 'Unknown error';
         throw new Error(`Mint failed: ${errorMsg}`);
       }
-
     } catch (error: any) {
       throw error;
     } finally {

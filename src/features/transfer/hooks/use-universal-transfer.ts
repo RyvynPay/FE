@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { useAccount, useReadContract, useWriteContract } from 'wagmi';
-import { Currency } from '@/types/currency';
-import { CURRENCY_CONFIGS } from '@/config/currencies';
-import { CONTRACTS, BASE_SEPOLIA_CHAIN_ID } from '@/config/contracts';
-import { parseUnits, formatUnits, isAddress } from 'viem';
 import RyUSDABI from '@/abis/RyUSD.json';
 import RyvynHandlerABI from '@/abis/RyvynHandler.json';
-import { readContract } from 'wagmi/actions';
+import { BASE_SEPOLIA_CHAIN_ID, CONTRACTS } from '@/config/contracts';
+import { CURRENCY_CONFIGS } from '@/config/currencies';
 import { config as wagmiConfig } from '@/lib/wagmi';
+import { Currency } from '@/types/currency';
+import { useState } from 'react';
+import { formatUnits, isAddress, parseUnits } from 'viem';
+import { useAccount, useReadContract, useWriteContract } from 'wagmi';
+import { readContract } from 'wagmi/actions';
 
 interface RewardPreview {
   senderReward: string;
@@ -20,7 +20,9 @@ export function useUniversalTransfer(currency: Currency) {
   const { address } = useAccount();
   const config = CURRENCY_CONFIGS[currency];
 
-  const [rewardPreview, setRewardPreview] = useState<RewardPreview | null>(null);
+  const [rewardPreview, setRewardPreview] = useState<RewardPreview | null>(
+    null
+  );
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Read balance
@@ -32,13 +34,12 @@ export function useUniversalTransfer(currency: Currency) {
     chainId: BASE_SEPOLIA_CHAIN_ID,
   });
 
-  const {
-    writeContractAsync,
-    isPending,
-  } = useWriteContract();
+  const { writeContractAsync, isPending } = useWriteContract();
 
   // Helper to wait for transaction confirmation
-  const waitForTransaction = async (hash: `0x${string}` | undefined): Promise<void> => {
+  const waitForTransaction = async (
+    hash: `0x${string}` | undefined
+  ): Promise<void> => {
     if (!hash) return;
 
     let attempts = 0;
@@ -62,7 +63,10 @@ export function useUniversalTransfer(currency: Currency) {
           throw new Error(receipt.result.message || 'Transaction failed');
         }
       } catch (e: any) {
-        if (e.message?.includes('Transaction') || e.message?.includes('reverted')) {
+        if (
+          e.message?.includes('Transaction') ||
+          e.message?.includes('reverted')
+        ) {
           throw e;
         }
       }
@@ -71,7 +75,9 @@ export function useUniversalTransfer(currency: Currency) {
       attempts++;
     }
 
-    throw new Error('Transaction confirmation timeout - please check block explorer');
+    throw new Error(
+      'Transaction confirmation timeout - please check block explorer'
+    );
   };
 
   const previewRewards = async (recipient: string, amount: string) => {
@@ -83,13 +89,13 @@ export function useUniversalTransfer(currency: Currency) {
     try {
       const amountBigInt = parseUnits(amount, config.decimals);
 
-      const result = await readContract(wagmiConfig, {
+      const result = (await readContract(wagmiConfig, {
         address: CONTRACTS.ryvynHandler,
         abi: RyvynHandlerABI,
         functionName: 'previewTransferRewards',
         args: [address, config.stablecoin, amountBigInt],
         chainId: BASE_SEPOLIA_CHAIN_ID,
-      }) as [bigint, bigint, bigint, bigint];
+      })) as [bigint, bigint, bigint, bigint];
 
       const [senderReward, receiverReward, senderShare, receiverShare] = result;
 
@@ -113,26 +119,26 @@ export function useUniversalTransfer(currency: Currency) {
 
     try {
       const transferTxHash = await writeContractAsync({
-        address: config.stablecoin,  // ryUSD or ryIDR
+        address: config.stablecoin, // ryUSD or ryIDR
         abi: RyUSDABI,
         functionName: 'transfer',
         args: [to, parseUnits(amount, config.decimals)],
       });
 
       // Wait for transfer transaction to be confirmed
-      console.log('Waiting for transfer transaction:', transferTxHash);
       await waitForTransaction(transferTxHash);
-      console.log('Transfer confirmed');
 
       // Refetch balance after successful transfer
       await refetchBalance();
     } catch (error: any) {
       // Check if user rejected transaction
-      if (error.message?.includes('User rejected') ||
-          error.message?.includes('user rejected') ||
-          error.message?.includes('User denied') ||
-          error.code === 4001 ||
-          error.code === 'ACTION_REJECTED') {
+      if (
+        error.message?.includes('User rejected') ||
+        error.message?.includes('user rejected') ||
+        error.message?.includes('User denied') ||
+        error.code === 4001 ||
+        error.code === 'ACTION_REJECTED'
+      ) {
         throw new Error('Transaction rejected by user');
       }
 

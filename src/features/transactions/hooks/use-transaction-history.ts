@@ -60,31 +60,13 @@ export function useTransactionHistory(filters?: TransactionFilters) {
     query: { enabled: !!address },
   });
 
-  // Debug logging
-  console.log('🔍 DEBUG - Address:', address);
-  console.log('🔍 DEBUG - USD Mint History:', usdMintHistory);
-  console.log('🔍 DEBUG - IDR Mint History:', idrMintHistory);
-  console.log('🔍 DEBUG - USD Events:', usdEvents);
-  console.log('🔍 DEBUG - IDR Events:', idrEvents);
-  console.log('🔍 DEBUG - Claim Events:', claimEvents);
-  console.log('🔍 DEBUG - Loading States:', {
-    usdMints: isLoadingUsdMints,
-    idrMints: isLoadingIdrMints,
-    events: isLoadingEvents,
-  });
-
   // Fetch all blockchain events
   useEffect(() => {
     const fetchAllEvents = async () => {
       if (!address || !publicClient) {
-        console.log('⚠️ Skipping event fetch - missing:', {
-          address: !!address,
-          publicClient: !!publicClient,
-        });
         return;
       }
 
-      console.log('📡 Starting event fetch for address:', address);
       setIsLoadingEvents(true);
       try {
         // Fetch ryUSD events
@@ -175,16 +157,6 @@ export function useTransactionHistory(filters?: TransactionFilters) {
         });
 
         setClaimEvents(claims);
-
-        console.log('✅ Events fetched successfully:', {
-          usdTransfers: usdSent.length + usdReceived.length,
-          usdDeposits: usdDeposits.length,
-          usdWithdrawals: usdWithdrawals.length,
-          idrTransfers: idrSent.length + idrReceived.length,
-          idrDeposits: idrDeposits.length,
-          idrWithdrawals: idrWithdrawals.length,
-          claims: claims.length,
-        });
       } catch (error) {
         console.error('❌ Error fetching events:', error);
       } finally {
@@ -198,11 +170,9 @@ export function useTransactionHistory(filters?: TransactionFilters) {
   // Parse and combine all transactions
   const transactions: Transaction[] = useMemo(() => {
     if (!address) {
-      console.log('⚠️ No address - returning empty transactions');
       return [];
     }
 
-    console.log('🔄 Parsing transactions...');
     const allTransactions: Transaction[] = [];
 
     // Parse ryUSD transactions
@@ -217,12 +187,6 @@ export function useTransactionHistory(filters?: TransactionFilters) {
       'USD'
     );
     const usdWithdrawals = parseWithdrawalEvents(usdEvents.withdrawals, 'USD');
-
-    console.log('💵 USD Parsed:', {
-      mints: usdMints.length,
-      transfers: usdTransfers.length,
-      withdrawals: usdWithdrawals.length,
-    });
 
     allTransactions.push(...usdMints, ...usdTransfers, ...usdWithdrawals);
 
@@ -239,26 +203,14 @@ export function useTransactionHistory(filters?: TransactionFilters) {
     );
     const idrWithdrawals = parseWithdrawalEvents(idrEvents.withdrawals, 'IDR');
 
-    console.log('💴 IDR Parsed:', {
-      mints: idrMints.length,
-      transfers: idrTransfers.length,
-      withdrawals: idrWithdrawals.length,
-    });
-
     allTransactions.push(...idrMints, ...idrTransfers, ...idrWithdrawals);
 
     // Parse claim events (knows currency from event args)
     const claims = parseClaimEvents(claimEvents);
-    console.log('🎁 Claims Parsed:', claims.length);
     allTransactions.push(...claims);
 
     // Sort by timestamp descending
     allTransactions.sort((a, b) => b.timestamp - a.timestamp);
-
-    console.log(
-      '📊 Total transactions before filtering:',
-      allTransactions.length
-    );
 
     // Apply filters
     let filtered = allTransactions;
@@ -287,9 +239,6 @@ export function useTransactionHistory(filters?: TransactionFilters) {
           tx.type.toLowerCase().includes(searchLower)
       );
     }
-
-    console.log('✅ Final filtered transactions:', filtered.length);
-    console.log('📋 Sample transaction:', filtered[0]);
 
     return filtered;
   }, [
