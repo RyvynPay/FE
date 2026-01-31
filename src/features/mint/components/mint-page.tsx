@@ -4,8 +4,7 @@ import PixelBlast from '@/components/PixelBlast';
 import { PageContainer } from '@/components/page-container';
 import { fadeInItem, staggerContainer } from '@/lib/animations';
 import { motion } from 'motion/react';
-import { Faucet } from './faucet';
-import MintRyUSD from './mint-ry-usd';
+import { UniversalMint } from './universal-mint';
 
 export default function MintPage() {
   return (
@@ -39,13 +38,13 @@ export default function MintPage() {
       >
         {/* Left Column */}
         <motion.div
-          className="flex flex-col justify-between py-8"
+          className="flex flex-col justify-between gap-12 py-8"
           variants={fadeInItem}
         >
           {/* Top: Header */}
           <div>
             <h1 className="text-2xl font-bold tracking-tighter uppercase sm:text-3xl">
-              Mint RyUSD
+              Mint Yield-Bearing Stablecoins
             </h1>
           </div>
 
@@ -56,20 +55,19 @@ export default function MintPage() {
               <span className="text-muted-foreground">REAL-WORLD ASSETS.</span>
             </h2>
             <p className="text-muted-foreground mt-6 text-lg font-medium md:text-xl">
-              Mint RyUSD instantly and start earning sustainable,
-              treasury-backed yield.
+              Mint ryUSD or ryIDR instantly and start earning sustainable,
+              treasury-backed yield. Choose USD or IDR exposure.
             </p>
           </div>
         </motion.div>
 
         {/* Right Column: Mint Card */}
         <motion.div
-          className="flex items-center justify-center lg:items-end lg:justify-end"
+          className="flex items-center justify-center lg:justify-end"
           variants={fadeInItem}
         >
           <div className="w-full max-w-md">
-            <MintRyUSD />
-            <Faucet />
+            <UniversalMint />
           </div>
         </motion.div>
       </motion.div>

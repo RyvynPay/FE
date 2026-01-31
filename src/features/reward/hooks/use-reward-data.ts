@@ -283,7 +283,7 @@ export function useRewardData(): UseRewardDataReturn {
       return;
     }
 
-    if (chain?.id !== 5003) {
+    if (chain?.id !== BASE_SEPOLIA_CHAIN_ID) {
       try {
         await switchChainAsync({ chainId: BASE_SEPOLIA_CHAIN_ID });
       } catch (error) {

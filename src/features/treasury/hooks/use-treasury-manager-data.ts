@@ -1,5 +1,5 @@
 import TreasuryManagerABI from '@/abis/TreasuryManager.json';
-import { CONTRACTS } from '@/config/contracts';
+import { BASE_SEPOLIA_CHAIN_ID, CONTRACTS } from '@/config/contracts';
 import { useMemo } from 'react';
 import { useReadContract } from 'wagmi';
 
@@ -19,7 +19,8 @@ export type TreasuryManagerStrategies = {
 export function useTreasuryManagerData() {
   const contractConfig = {
     address: CONTRACTS.treasuryManager as `0x${string}`,
-    abi: TreasuryManagerABI.abi,
+    abi: TreasuryManagerABI,
+    chainId: BASE_SEPOLIA_CHAIN_ID,
   } as const;
 
   const { data: allocationInfo, isLoading: isLoadingInfo } = useReadContract({
